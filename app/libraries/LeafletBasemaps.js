@@ -38,7 +38,7 @@ Ext.define('Ripples.libraries.LeafletBasemaps', {
     itemId: 'osmLayer',
     name: 'osmLayer',
     url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    attribution: 'Map data &copy; OpenStreetMap contributors, CC-BY-SA'
+    attribution: 'Map data &copy; OpenStreetMap contributors, CC-BY-SA',
     maxZoom: 23
   }],
 

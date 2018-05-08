@@ -1,45 +1,3 @@
-var markers = {};
-var ships = {};
-var updates = {};
-var pois = {};
-var plans = {};
-var etaMarkers = {};
-var tails = {};
-var map, marker;
-var plotlayers = [];
-var selectedMarker;
-var originLat, originLng, originZoom, currentLat, currentLng, currentZoom;
-
-originLat=41.184774;
-originLng=-8.704476;
-originZoom=12;
-
-var isMobile = {
-	Android : function() {
-		return navigator.userAgent.match(/Android/i);
-	},
-	BlackBerry : function() {
-		return navigator.userAgent.match(/BlackBerry/i);
-	},
-	iOS : function() {
-		return navigator.userAgent.match(/iPhone|iPad|iPod/i);
-	},
-	Opera : function() {
-		return navigator.userAgent.match(/Opera Mini/i);
-	},
-	Windows : function() {
-		return navigator.userAgent.match(/IEMobile/i)
-				|| navigator.userAgent.match(/WPDesktop/i);
-	},
-	any : function() {
-		return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS()
-				|| isMobile.Opera() || isMobile.Windows());
-	}
-};
-
-$.ajaxSetup({
-	cache : false
-});
 
 function loadPoi() {
 	var poi_json = $.getJSON("/poi", function(data) {
@@ -102,14 +60,6 @@ function centerMap(e) {
 	console.log();
 	console.log("cookie data -(centerMap) - Lat: "+$.cookie('savedLat')+" Lng: "+$.cookie('savedLng')+" Zoom: "+$.cookie('savedZoom'));
 	alert("From now on, map will be centered here.");
-}
-
-function zoomIn(e) {
-	map.zoomIn();
-}
-
-function zoomOut(e) {
-	map.zoomOut();
 }
 
 function getCookiePos(){
@@ -176,35 +126,8 @@ function create_map(lat,lng,zoom){
 	});
 }
 
-if (isMobile.any()) {
-	//alert('Mobile');
-	L.control.layers(baseLayers, overlays).addTo(map);
-} else {
-	//alert('PC');
-	//L.control.weather().addTo(map);
-	L.control.layers.minimap(baseLayers, overlays).addTo(map);
-	var mouse_coordinates = new L.control.coordinates({
-		position:"topleft",
-		labelTemplateLat:"Lat: {y}",
-		labelTemplateLng:"Lng: {x}",
-		useLatLngOrder:true
-	});
-	map.addControl(mouse_coordinates);
-}
 
 
-
-L.control.locate({
-	keepCurrentZoomLevel : true,
-	stopFollowingOnDrag : true,
-	icon: 'fa fa-map-marker',  // class for icon, fa-location-arrow or fa-map-marker
-    iconLoading: 'fa fa-spinner fa-spin',  // class for loading icon
-    metric: true,  // use metric or imperial units
-    onLocationError: function(err) {alert(err.message)},  // define an error callback function
-    onLocationOutsideMapBounds:  function(context) { // called when outside map boundaries
-            alert(context.options.strings.outsideMapBoundsMsg);
-    }
-}).addTo(map);
 
 var nameById = {};
 
