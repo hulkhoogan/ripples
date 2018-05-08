@@ -192,9 +192,6 @@
    */
   "js": [
     {
-      "path": "/resources/js/leaflet-clonelayer.js"
-    },
-    {
       "path": "/resources/js/KML.js"
     },
     {

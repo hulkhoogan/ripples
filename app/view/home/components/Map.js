@@ -83,8 +83,6 @@ Ext.define('Ripples.view.home.components.Map', {
       }
     }).addTo(map);
 
-    console.log(this.getOverlays());
-
     L.control.layers.minimap(this.getBaseLayers(), this.getOverlays()).addTo(map);
 
   },

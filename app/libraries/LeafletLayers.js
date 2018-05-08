@@ -40,8 +40,7 @@ Ext.define('Ripples.libraries.LeafletLayers', {
     }.bind(this));
     if (layer) {
       var leafletLayer;
-      console.log(layer);
-      switch (layer.type) {
+\      switch (layer.type) {
         case 'KML':
           leafletLayer = new L.KML(layer.url, layer.options);
           break;
