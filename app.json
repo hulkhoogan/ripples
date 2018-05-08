@@ -204,9 +204,6 @@
       "path": "/resources/js/Leaflet.Coordinates-0.1.5.src.js"
     },
     {
-      "path": "/resources/js/Leaflet.Coordinates-0.1.5.src.js"
-    },
-    {
       "path": "${framework.dir}/build/ext-all-rtl-debug.js"
     },
     {
