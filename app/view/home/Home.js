@@ -5,7 +5,8 @@ Ext.define('Ripples.view.home.Home', {
     'Ext.layout.container.Fit',
     'Ext.ux.LeafletMap',
     'Ripples.view.home.HomeController',
-    'Ripples.view.home.HomeModel'
+    'Ripples.view.home.HomeModel',
+    'Ripples.view.home.components.Map'
   ],
 
   alias: 'widget.home',
@@ -18,15 +19,8 @@ Ext.define('Ripples.view.home.Home', {
 
   width: '100%',
   height: '100%',
-  layout: 'fit',
   items: [{
-    xtype: 'leafletmap',
-    id: 'map1',
-    useLocation: true,
-    autoCenter: true,
-    enableOwnPositionMarker: false,
-    mapOptions: {
-      zoom: 14
-    }
-  }]
+    xtype: 'mapleaflet'
+  }],
+  layout: 'fit'
 });
