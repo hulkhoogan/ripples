@@ -2,7 +2,7 @@ Ext.define('Ripples.libraries.LeafletLayers', {
 
   layers: [{
     itemId: 'kmlLayer',
-    url: Ext.getResourcePath('/kml/file.kmz'),
+    url: '/kml/file.kmz',
     type: 'KML',
     options: {
       async: true
@@ -40,12 +40,13 @@ Ext.define('Ripples.libraries.LeafletLayers', {
     }.bind(this));
     if (layer) {
       var leafletLayer;
+      console.log(layer);
       switch (layer.type) {
         case 'KMS':
-          leafletLayer = L.KML(layer.url, layer.options);
+          leafletLayer = new L.KML(layer.url, layer.options);
           break;
         case 'tileLayer':
-          leafletLayer = L.tileLayer(layer.url, layer.options);
+          leafletLayer = new L.tileLayer(layer.url, layer.options);
           break;
         default: {}
       }

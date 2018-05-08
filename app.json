@@ -192,6 +192,15 @@
    */
   "js": [
     {
+      "path": "/resources/js/leaflet-clonelayer.js"
+    },
+    {
+      "path": "/resources/js/KML.js"
+    },
+    {
+      "path": "/resources/js/L.Control.Layers.Minimap.js"
+    },
+    {
       "path": "/resources/js/L.Control.Locate.min.js"
     },
     {

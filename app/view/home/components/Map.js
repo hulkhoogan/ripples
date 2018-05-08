@@ -2,20 +2,14 @@ Ext.define('Ripples.view.home.components.Map', {
   extend: 'Ext.ux.LeafletMap',
   alias: 'widget.mapleaflet',
 
+  mixins: [
+    'Ripples.libraries.LeafletBasemaps',
+    'Ripples.libraries.LeafletLayers'
+  ],
+
   config: {
-    baseLayers: {
-      'Open Street Map': 'osmLayer',
-      'Grayscale': 'streets',
-      'Terrain': 'hybrid',
-      'Outdoors': 'ThunderForest1',
-      'ESRI Ocean': 'Esri_OceanBasemap',
-      'ESRI Aerial': 'Esri_WorldImagery'
-    },
-    overlays: {
-      'Nautical Charts': 'transasLayer',
-      'KML Layer': 'kmlLayer',
-      'Ship Traffic': 'densityLayer'
-    },
+    baseLayers: null,
+    overlays: null,
     originLat: 41.184774,
     originLng: -8.704476,
     originZoom: 12,
@@ -51,6 +45,22 @@ Ext.define('Ripples.view.home.components.Map', {
 
   },
 
+  setConfigs: function () {
+    this.setBaseLayers({
+      'Open Street Map': this.getBasemapById('osmLayer'),
+      'Grayscale': this.getBasemapById('streets'),
+      'Terrain': this.getBasemapById('hybrid'),
+      'Outdoors': this.getBasemapById('thunderForest'),
+      'ESRI Ocean': this.getBasemapById('oceanBasemap'),
+      'ESRI Aerial': this.getBasemapById('worldImagery')
+    });
+    this.setOverlays({
+      'Nautical Charts': this.getLayerById('transasLayer'),
+      'KML Layer': this.getLayerById('kmlLayer'),
+      'Ship Traffic': this.getLayerById('densityLayer')
+    });
+  },
+
   initPlugins: function () {
     var map = this.getMap(),
       mouse_coordinates = new L.control.coordinates({
@@ -72,10 +82,16 @@ Ext.define('Ripples.view.home.components.Map', {
         alert(context.options.strings.outsideMapBoundsMsg);
       }
     }).addTo(map);
+
+    console.log(this.getOverlays());
+
+    L.control.layers.minimap(this.getBaseLayers(), this.getOverlays()).addTo(map);
+
   },
 
   listeners: {
     maprender: function (panel, map, layers) {
+      this.setConfigs();
       this.initPlugins();
     }
   }
