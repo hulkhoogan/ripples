@@ -26,19 +26,17 @@ Ext.define('Ripples.libraries.LeafletBasemaps', {
     }
   }, {
     itemId: 'worldImagery',
+    url: 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     options: {
       name: 'Esri_WorldImagery',
-      url: 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-      attribution: 'Tiles &copy; ESRI',
-      maxZoom: null
+      attribution: 'Tiles &copy; ESRI'
     }
   }, {
     itemId: 'thunderForest',
     url: 'https://{s}.tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=c4d207cad22c4f65b9adb1adbbaef141',
     options: {
       name: 'ThunderForest1',
-      attribution: 'Tiles &copy; ThunderForest',
-      maxZoom: null
+      attribution: 'Tiles &copy; ThunderForest'
     }
   }, {
     itemId: 'osmLayer',
