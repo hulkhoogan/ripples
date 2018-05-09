@@ -39,6 +39,11 @@ Ext.define('Ripples.view.home.components.Map', {
       callback: function (e) {
         this.options.cmp.centerMap(e);
       }
+    }, {
+      text: 'Show GIBS Layers',
+      callback: function (e) {
+        this.options.cmp.toogleGibsLayer(e);
+      }
     }]
   },
 
@@ -50,6 +55,11 @@ Ext.define('Ripples.view.home.components.Map', {
   centerMap: function (e) {
     var map = this.getMap();
     map.panTo(e.latlng);
+  },
+
+  toogleGibsLayer: function () {
+    var map = this.getMap();
+
   },
 
   setConfigs: function () {
@@ -106,6 +116,11 @@ Ext.define('Ripples.view.home.components.Map', {
     maprender: function (panel, map, layers) {
       this.setConfigs();
       this.initPlugins();
+      var layer = new L.GIBSLayer('MODIS_Aqua_SurfaceReflectance_Bands721', {
+        date: new Date('2015/04/01'),
+        transparent: true
+      }).addTo(map);
+      console.log(layer);
     }
   }
 });
