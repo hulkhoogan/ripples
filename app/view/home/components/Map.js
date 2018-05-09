@@ -226,6 +226,7 @@ Ext.define('Ripples.view.home.components.Map', {
       });
 
       map.addLayer(GHRSST_L4_MUR_Sea_Surface_Temperature);
+      GHRSST_L4_MUR_Sea_Surface_Temperature.bringToFront();
     }
   }
 });
