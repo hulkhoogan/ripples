@@ -14,7 +14,8 @@ Ext.define('Ripples.view.home.components.Map', {
     originLng: -8.704476,
     originZoom: 12,
 
-    activeLayers: ['osmLayer']
+    activeLayer: 'Open Street Map',
+    activeOverLay: 'Nautical Charts'
   },
 
   useLocation: false,
@@ -84,6 +85,13 @@ Ext.define('Ripples.view.home.components.Map', {
     }).addTo(map);
 
     L.control.layers.minimap(this.getBaseLayers(), this.getOverlays()).addTo(map);
+
+    if (this.getActiveLayer()) {
+      map.addLayer(this.getBaseLayers()[this.getActiveLayer()]);
+    }
+    if (this.getActiveOverLay()) {
+      map.addLayer(this.getOverlays()[this.getActiveOverLay()]);
+    }
 
   },
 

@@ -10,13 +10,6 @@ Ext.define('Ext.ux.LeafletMap', {
   referenceHolder: true,
 
   config: {
-    baseLayers: null,
-    overlays: null,
-    originLat: 41.184774,
-    originLng: -8.704476,
-    originZoom: 12,
-
-    activeLayers: ['osmLayer'],
 
     baseCls: Ext.baseCSSPrefix + 'leafletmap',
     useLocation: false,
@@ -28,8 +21,8 @@ Ext.define('Ext.ux.LeafletMap', {
     tileLayers: [],
     // urls and such
     tileLayerOptions: {
-      tileLayerUrl: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
-      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>'
+      // tileLayerUrl: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
+      // attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>'
     },
 
     /**
