@@ -30,20 +30,26 @@ Ext.define('Ripples.view.home.components.Map', {
     measureControl: true,
     contextmenuWidth: 140,
     contextmenuItems: [{
-      text: 'Show coordinates',
-      callback: 'showCoordinates'
+      text: 'Show Coordinates',
+      callback: function (e) {
+        this.options.cmp.showCoordinates(e);
+      }
     }, {
-      text: 'Center map here',
-      callback: 'centerMap'
+      text: 'Center Map',
+      callback: function (e) {
+        this.options.cmp.centerMap(e);
+      }
     }]
   },
 
-  showCoordinates: function () {
-
+  showCoordinates: function (e) {
+    var map = this.getMap(),
+      mCoords = new L.marker(e.latlng).bindPopup('Lat: ' + e.latlng.lat + ' Lng:' + e.latlng.lng).addTo(map).openPopup();
+    Ext.defer(function () {map.removeLayer(mCoords);}, 5000);
   },
-
-  centerMap: function () {
-
+  centerMap: function (e) {
+    var map = this.getMap();
+    map.panTo(e.latlng);
   },
 
   setConfigs: function () {
@@ -64,6 +70,7 @@ Ext.define('Ripples.view.home.components.Map', {
 
   initPlugins: function () {
     var map = this.getMap(),
+      me = this,
       mouse_coordinates = new L.control.coordinates({
         position: 'topleft',
         labelTemplateLat: 'Lat: {y}',

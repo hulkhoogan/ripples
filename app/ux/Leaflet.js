@@ -122,6 +122,8 @@ Ext.define('Ext.ux.LeafletMap', {
       mapOptions = me.getMapOptions(),
       map;
 
+    mapOptions.cmp = this;
+
     if (ll && !element.dom._leaflet) {
       // if no center property is given -> use default position
       if (!mapOptions.hasOwnProperty('center')) {
