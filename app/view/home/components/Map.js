@@ -81,7 +81,7 @@ Ext.define('Ripples.view.home.components.Map', {
       'AMSR2_Wind_Speed_Day': this.getLayerById('AMSR2_Wind_Speed_Day'),
       'MODIS_Terra_Cloud_Top_Pressure_Day': this.getLayerById('MODIS_Terra_Cloud_Top_Pressure_Day'),
       'AMSR2_Surface_Precipitation_Rate_Day': this.getLayerById('AMSR2_Surface_Precipitation_Rate_Day'),
-      'MODIS_Terra_Chlorophyll_A': this.getLayerById('MODIS_Terra_Chlorophyll_A'),
+      'MODIS_Terra_Chlorophyll_A': this.getLayerById('MODIS_Terra_Chlorophyll_A')
     });
   },
 
@@ -108,7 +108,7 @@ Ext.define('Ripples.view.home.components.Map', {
       }
     }).addTo(map);
 
-    L.control.layers.minimap(this.getBaseLayers(), this.getOverlays()).addTo(map);
+    L.control.layers(this.getBaseLayers(), this.getOverlays(), {autoZIndex: false}).addTo(map);
 
     if (this.getActiveLayer()) {
       map.addLayer(this.getBaseLayers()[this.getActiveLayer()]);
