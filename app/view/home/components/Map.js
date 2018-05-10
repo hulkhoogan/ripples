@@ -75,14 +75,7 @@ Ext.define('Ripples.view.home.components.Map', {
     this.setOverlays({
       'Nautical Charts': this.getLayerById('transasLayer'),
       'KML Layer': this.getLayerById('kmlLayer'),
-      'Ship Traffic': this.getLayerById('densityLayer'),
-      'MODIS_Terra_CorrectedReflectance_TrueColor': this.getLayerById('MODIS_Terra_CorrectedReflectance_TrueColor'),
-      'GHRSST_L4_MUR_Sea_Surface_Temperature': this.getLayerById('GHRSST_L4_MUR_Sea_Surface_Temperature'),
-      'MODIS_Terra_Sea_Ice': this.getLayerById('MODIS_Terra_Sea_Ice'),
-      'AMSR2_Wind_Speed_Day': this.getLayerById('AMSR2_Wind_Speed_Day'),
-      'MODIS_Terra_Cloud_Top_Pressure_Day': this.getLayerById('MODIS_Terra_Cloud_Top_Pressure_Day'),
-      'AMSR2_Surface_Precipitation_Rate_Day': this.getLayerById('AMSR2_Surface_Precipitation_Rate_Day'),
-      'MODIS_Terra_Chlorophyll_A': this.getLayerById('MODIS_Terra_Chlorophyll_A')
+      'Ship Traffic': this.getLayerById('densityLayer')
     });
   },
 
@@ -118,7 +111,6 @@ Ext.define('Ripples.view.home.components.Map', {
       overlays[id] = new L.GIBSLayer(id, {date: startDate, transparent: true});
     }
     this.setOverlays(overlays);
-    // L.control.layers(baseLayers, null, {collapsed: false}).addTo(map);
 
     L.control.layers(this.getBaseLayers(), this.getOverlays(), {autoZIndex: false}).addTo(map);
 
@@ -138,24 +130,3 @@ Ext.define('Ripples.view.home.components.Map', {
     }
   }
 });
-
-/**
- * TODO
- *
- * afterRender
- if (isMobile.any()) {
-	//alert('Mobile');
-	L.control.layers(baseLayers, overlays).addTo(map);
-} else {
-	//alert('PC');
-	//L.control.weather().addTo(map);
-	L.control.layers.minimap(baseLayers, overlays).addTo(map);
-	var mouse_coordinates = new L.control.coordinates({
-		position:"topleft",
-		labelTemplateLat:"Lat: {y}",
-		labelTemplateLng:"Lng: {x}",
-		useLatLngOrder:true
-	});
-	map.addControl(mouse_coordinates);
-}
- */
