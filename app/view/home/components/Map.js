@@ -69,7 +69,8 @@ Ext.define('Ripples.view.home.components.Map', {
       'Terrain': this.getBasemapById('hybrid'),
       'Outdoors': this.getBasemapById('thunderForest'),
       'ESRI Ocean': this.getBasemapById('oceanBasemap'),
-      'ESRI Aerial': this.getBasemapById('worldImagery')
+      'ESRI Aerial': this.getBasemapById('worldImagery'),
+      'GMRT': this.getBasemapById('gmrt')
     });
     this.setOverlays({
       'Nautical Charts': this.getLayerById('transasLayer'),
@@ -99,14 +100,25 @@ Ext.define('Ripples.view.home.components.Map', {
     L.control.locate({
       keepCurrentZoomLevel: true,
       stopFollowingOnDrag: true,
-      icon: 'fa fa-map-marker',  // class for icon, fa-location-arrow or fa-map-marker
-      iconLoading: 'fa fa-spinner fa-spin',  // class for loading icon
-      metric: true,  // use metric or imperial units
-      onLocationError: function (err) {alert(err.message);},  // define an error callback function
-      onLocationOutsideMapBounds: function (context) { // called when outside map boundaries
+      icon: 'fa fa-map-marker',
+      iconLoading: 'fa fa-spinner fa-spin',
+      metric: true,
+      onLocationError: function (err) {alert(err.message);},
+      onLocationOutsideMapBounds: function (context) {
         alert(context.options.strings.outsideMapBoundsMsg);
       }
     }).addTo(map);
+    var now = new Date();
+
+    var oneDay = 1000 * 60 * 60 * 24,
+      startTimestamp = now.getTime() - oneDay + now.getTimezoneOffset() * 60 * 1000,
+      startDate = new Date(startTimestamp); //previous day
+    var overlays = this.getOverlays();
+    for (var id in L.GIBS_LAYERS) {
+      overlays[id] = new L.GIBSLayer(id, {date: startDate, transparent: true});
+    }
+    this.setOverlays(overlays);
+    // L.control.layers(baseLayers, null, {collapsed: false}).addTo(map);
 
     L.control.layers(this.getBaseLayers(), this.getOverlays(), {autoZIndex: false}).addTo(map);
 

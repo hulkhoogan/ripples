@@ -196,6 +196,10 @@
     },
     {
       "path": "/resources/js/L.Control.Layers.Minimap.js"
+    },  {
+      "path": "/resources/js/GIBSMetadata.js"
+    },  {
+      "path": "/resources/js/GIBSLayer.js"
     },
     {
       "path": "/resources/js/L.Control.Locate.min.js"

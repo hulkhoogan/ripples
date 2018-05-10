@@ -2,6 +2,7 @@ Ext.define('Ripples.libraries.LeafletBasemaps', {
 
   basemaps: [{
     itemId: 'hybrid',
+    type: 'TileLayer',
     url: 'http://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}',
     options: {
       name: 'Hybrid',
@@ -10,6 +11,7 @@ Ext.define('Ripples.libraries.LeafletBasemaps', {
     }
   }, {
     itemId: 'streets',
+    type: 'TileLayer',
     url: 'http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
     options: {
       name: 'Streets',
@@ -18,6 +20,7 @@ Ext.define('Ripples.libraries.LeafletBasemaps', {
     }
   }, {
     itemId: 'oceanBasemap',
+    type: 'TileLayer',
     url: 'http://server.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}',
     options: {
       name: 'Esri_OceanBasemap',
@@ -26,6 +29,7 @@ Ext.define('Ripples.libraries.LeafletBasemaps', {
     }
   }, {
     itemId: 'worldImagery',
+    type: 'TileLayer',
     url: 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     options: {
       name: 'Esri_WorldImagery',
@@ -33,6 +37,7 @@ Ext.define('Ripples.libraries.LeafletBasemaps', {
     }
   }, {
     itemId: 'thunderForest',
+    type: 'TileLayer',
     url: 'https://{s}.tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=c4d207cad22c4f65b9adb1adbbaef141',
     options: {
       name: 'ThunderForest1',
@@ -40,10 +45,19 @@ Ext.define('Ripples.libraries.LeafletBasemaps', {
     }
   }, {
     itemId: 'osmLayer',
+    type: 'TileLayer',
     url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     options: {
       attribution: 'Map data &copy; OpenStreetMap contributors, CC-BY-SA',
       maxZoom: 23
+    }
+  }, {
+    itemId: 'gmrt',
+    type: 'wms',
+    url: 'https://www.gmrt.org/services/mapserver/wms_merc?service=WMS&version=1.0.0&request=GetMap',
+    options: {
+      layers: 'gmrt',
+      attribution: 'GEBCO (multiple sources)'
     }
   }],
 
@@ -55,7 +69,16 @@ Ext.define('Ripples.libraries.LeafletBasemaps', {
       }
     }.bind(this));
     if (basemap) {
-      var leafletBasemap = new L.TileLayer(basemap.url, basemap.options);
+      var leafletBasemap;
+      switch (basemap.type) {
+        case 'TileLayer':
+          leafletBasemap = new L.TileLayer(basemap.url, basemap.options);
+          break;
+        case 'wms':
+          leafletBasemap = new L.tileLayer.wms(basemap.url, basemap.options);
+          break;
+        default: {}
+      }
       return leafletBasemap;
     } else {
       console.error('Unknown basemap \'' + itemId + '\'.');
