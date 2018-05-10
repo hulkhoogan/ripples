@@ -207,12 +207,6 @@
       "path": "/resources/js/leaflet.contextmenu.js"
     },
     {
-      "path": "/resources/js/GIBSLayer.js"
-    },
-    {
-      "path": "/resources/js/GIBSMetadata.js"
-    },
-    {
       "path": "${framework.dir}/build/ext-all-rtl-debug.js"
     },
     {

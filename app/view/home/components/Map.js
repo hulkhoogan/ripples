@@ -74,7 +74,14 @@ Ext.define('Ripples.view.home.components.Map', {
     this.setOverlays({
       'Nautical Charts': this.getLayerById('transasLayer'),
       'KML Layer': this.getLayerById('kmlLayer'),
-      'Ship Traffic': this.getLayerById('densityLayer')
+      'Ship Traffic': this.getLayerById('densityLayer'),
+      'MODIS_Terra_CorrectedReflectance_TrueColor': this.getLayerById('MODIS_Terra_CorrectedReflectance_TrueColor'),
+      'GHRSST_L4_MUR_Sea_Surface_Temperature': this.getLayerById('GHRSST_L4_MUR_Sea_Surface_Temperature'),
+      'MODIS_Terra_Sea_Ice': this.getLayerById('MODIS_Terra_Sea_Ice'),
+      'AMSR2_Wind_Speed_Day': this.getLayerById('AMSR2_Wind_Speed_Day'),
+      'MODIS_Terra_Cloud_Top_Pressure_Day': this.getLayerById('MODIS_Terra_Cloud_Top_Pressure_Day'),
+      'AMSR2_Surface_Precipitation_Rate_Day': this.getLayerById('AMSR2_Surface_Precipitation_Rate_Day'),
+      'MODIS_Terra_Chlorophyll_A': this.getLayerById('MODIS_Terra_Chlorophyll_A'),
     });
   },
 
@@ -116,117 +123,6 @@ Ext.define('Ripples.view.home.components.Map', {
     maprender: function (panel, map, layers) {
       this.setConfigs();
       this.initPlugins();
-      var template =
-        '//map1{s}.vis.earthdata.nasa.gov/wmts-webmerc/' +
-        '{layer}/default/{time}/{tileMatrixSet}/{z}/{y}/{x}.{format}';
-
-      var MODIS_Terra_CorrectedReflectance_TrueColor = L.tileLayer(template, {
-        layer: 'MODIS_Terra_CorrectedReflectance_TrueColor',
-        tileMatrixSet: 'GoogleMapsCompatible_Level9',
-        maxZoom: 9,
-        time: '2013-11-04',
-        tileSize: 256,
-        opacity: 0.8,
-        subdomains: 'abc',
-        format: 'jpeg',
-        bounds: [
-          [-85.0511287776, -179.999999975],
-          [85.0511287776, 179.999999975]
-        ]
-      });
-
-      var GHRSST_L4_MUR_Sea_Surface_Temperature = L.tileLayer(template, {
-        layer: 'GHRSST_L4_MUR_Sea_Surface_Temperature',
-        tileMatrixSet: 'GoogleMapsCompatible_Level7',
-        maxZoom: 7,
-        time: '2018-05-08',
-        tileSize: 256,
-        opacity: 0.8,
-        format: 'png',
-        subdomains: 'abc',
-        bounds: [
-          [-85.0511287776, -179.999999975],
-          [85.0511287776, 179.999999975]
-        ]
-        // ,
-        // crs: L.CRS.EPSG900913
-      });
-      var MODIS_Terra_Sea_Ice = L.tileLayer(template, {
-        layer: 'MODIS_Terra_Sea_Ice',
-        tileMatrixSet: 'GoogleMapsCompatible_Level7',
-        maxZoom: 7,
-        time: '2013-11-04',
-        tileSize: 256,
-        opacity: 0.8,
-        format: 'png',
-        subdomains: 'abc',
-        bounds: [
-          [-85.0511287776, -179.999999975],
-          [85.0511287776, 179.999999975]
-        ]
-      });
-      var AMSR2_Wind_Speed_Day = L.tileLayer(template, {
-        layer: 'AMSR2_Wind_Speed_Day',
-        tileMatrixSet: 'GoogleMapsCompatible_Level6',
-        maxZoom: 6,
-        time: '2013-11-04',
-        tileSize: 256,
-        opacity: 0.8,
-        format: 'png',
-        subdomains: 'abc',
-        bounds: [
-          [-85.0511287776, -179.999999975],
-          [85.0511287776, 179.999999975]
-        ]
-      });
-
-      var MODIS_Terra_Cloud_Top_Pressure_Day = L.tileLayer(template, {
-        layer: 'MODIS_Terra_Cloud_Top_Pressure_Day',
-        tileMatrixSet: 'GoogleMapsCompatible_Level6',
-        maxZoom: 6,
-        time: '2013-11-04',
-        tileSize: 256,
-        opacity: 0.8,
-        format: 'png',
-        subdomains: 'abc',
-        bounds: [
-          [-85.0511287776, -179.999999975],
-          [85.0511287776, 179.999999975]
-        ]
-      });
-
-      var AMSR2_Surface_Precipitation_Rate_Day = L.tileLayer(template, {
-        layer: 'AMSR2_Surface_Precipitation_Rate_Day',
-        tileMatrixSet: 'GoogleMapsCompatible_Level6',
-        maxZoom: 6,
-        time: '2013-11-04',
-        tileSize: 256,
-        opacity: 0.8,
-        format: 'png',
-        subdomains: 'abc',
-        bounds: [
-          [-85.0511287776, -179.999999975],
-          [85.0511287776, 179.999999975]
-        ]
-      });
-
-      var MODIS_Terra_Chlorophyll_A = L.tileLayer(template, {
-        layer: 'MODIS_Terra_Chlorophyll_A',
-        tileMatrixSet: 'GoogleMapsCompatible_Level7',
-        maxZoom: 7,
-        time: '2013-11-04',
-        tileSize: 256,
-        opacity: 0.8,
-        format: 'png',
-        subdomains: 'abc',
-        bounds: [
-          [-85.0511287776, -179.999999975],
-          [85.0511287776, 179.999999975]
-        ]
-      });
-
-      map.addLayer(GHRSST_L4_MUR_Sea_Surface_Temperature);
-      GHRSST_L4_MUR_Sea_Surface_Temperature.bringToFront();
     }
   }
 });

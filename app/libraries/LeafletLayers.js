@@ -29,6 +29,125 @@ Ext.define('Ripples.libraries.LeafletLayers', {
       maxNativeZoom: 10,
       layerVisibility: false
     }
+  }, {
+    itemId: 'MODIS_Terra_CorrectedReflectance_TrueColor',
+    type: 'nasatileLayer',
+    options: {
+      layer: 'MODIS_Terra_CorrectedReflectance_TrueColor',
+      tileMatrixSet: 'GoogleMapsCompatible_Level9',
+      maxZoom: 9,
+      time: '2013-11-04',
+      tileSize: 256,
+      opacity: 0.8,
+      subdomains: 'abc',
+      format: 'jpeg',
+      bounds: [
+        [-85.0511287776, -179.999999975],
+        [85.0511287776, 179.999999975]
+      ]
+    }
+  }, {
+    itemId: 'GHRSST_L4_MUR_Sea_Surface_Temperature',
+    type: 'nasatileLayer',
+    options: {
+      layer: 'GHRSST_L4_MUR_Sea_Surface_Temperature',
+      tileMatrixSet: 'GoogleMapsCompatible_Level7',
+      maxZoom: 7,
+      time: '2018-05-08',
+      tileSize: 256,
+      opacity: 0.8,
+      format: 'png',
+      subdomains: 'abc',
+      bounds: [
+        [-85.0511287776, -179.999999975],
+        [85.0511287776, 179.999999975]
+      ]
+    }
+  }, {
+    itemId: 'MODIS_Terra_Sea_Ice',
+    type: 'nasatileLayer',
+    options: {
+      layer: 'MODIS_Terra_Sea_Ice',
+      tileMatrixSet: 'GoogleMapsCompatible_Level7',
+      maxZoom: 7,
+      time: '2013-11-04',
+      tileSize: 256,
+      opacity: 0.8,
+      format: 'png',
+      subdomains: 'abc',
+      bounds: [
+        [-85.0511287776, -179.999999975],
+        [85.0511287776, 179.999999975]
+      ]
+    }
+  }, {
+    itemId: 'AMSR2_Wind_Speed_Day',
+    type: 'nasatileLayer',
+    options: {
+      layer: 'AMSR2_Wind_Speed_Day',
+      tileMatrixSet: 'GoogleMapsCompatible_Level6',
+      maxZoom: 6,
+      time: '2013-11-04',
+      tileSize: 256,
+      opacity: 0.8,
+      format: 'png',
+      subdomains: 'abc',
+      bounds: [
+        [-85.0511287776, -179.999999975],
+        [85.0511287776, 179.999999975]
+      ]
+    }
+  }, {
+    itemId: 'MODIS_Terra_Cloud_Top_Pressure_Day',
+    type: 'nasatileLayer',
+    options: {
+      layer: 'MODIS_Terra_Cloud_Top_Pressure_Day',
+      tileMatrixSet: 'GoogleMapsCompatible_Level6',
+      maxZoom: 6,
+      time: '2013-11-04',
+      tileSize: 256,
+      opacity: 0.8,
+      format: 'png',
+      subdomains: 'abc',
+      bounds: [
+        [-85.0511287776, -179.999999975],
+        [85.0511287776, 179.999999975]
+      ]
+    }
+  }, {
+    itemId: 'AMSR2_Surface_Precipitation_Rate_Day',
+    type: 'nasatileLayer',
+    options: {
+      layer: 'AMSR2_Surface_Precipitation_Rate_Day',
+      tileMatrixSet: 'GoogleMapsCompatible_Level6',
+      maxZoom: 6,
+      time: '2013-11-04',
+      tileSize: 256,
+      opacity: 0.8,
+      format: 'png',
+      subdomains: 'abc',
+      bounds: [
+        [-85.0511287776, -179.999999975],
+        [85.0511287776, 179.999999975]
+      ]
+    }
+  }, {
+    itemId: 'MODIS_Terra_Chlorophyll_A',
+    type: 'nasatileLayer',
+    options: {
+      layer: 'MODIS_Terra_Chlorophyll_A',
+      tileMatrixSet: 'GoogleMapsCompatible_Level7',
+      maxZoom: 7,
+      time: '2013-11-04',
+      tileSize: 256,
+      opacity: 0.8,
+      format: 'png',
+      subdomains: 'abc',
+      bounds: [
+        [-85.0511287776, -179.999999975],
+        [85.0511287776, 179.999999975]
+      ]
+    }
   }],
 
   getLayerById: function (itemId) {
@@ -46,6 +165,12 @@ Ext.define('Ripples.libraries.LeafletLayers', {
           break;
         case 'tileLayer':
           leafletLayer = new L.tileLayer(layer.url, layer.options);
+          break;
+        case 'nasatileLayer':
+          var template =
+            '//map1{s}.vis.earthdata.nasa.gov/wmts-webmerc/' +
+            '{layer}/default/{time}/{tileMatrixSet}/{z}/{y}/{x}.{format}';
+          leafletLayer = new L.tileLayer(template, layer.options);
           break;
         default: {}
       }
