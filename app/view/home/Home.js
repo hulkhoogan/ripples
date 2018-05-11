@@ -2,10 +2,14 @@ Ext.define('Ripples.view.home.Home', {
   extend: 'Ext.Container',
 
   requires: [
+    'Ext.button.Split',
     'Ext.container.Container',
+    'Ext.form.Label',
     'Ext.layout.container.Fit',
     'Ext.layout.container.HBox',
     'Ext.layout.container.VBox',
+    'Ext.toolbar.Fill',
+    'Ext.toolbar.Toolbar',
     'Ext.ux.LeafletMap',
     'Ripples.view.home.HomeController',
     'Ripples.view.home.HomeModel',
@@ -25,18 +29,42 @@ Ext.define('Ripples.view.home.Home', {
   layout: 'vbox',
 
   items: [{
-    xtype: 'container',
-    flex: 1,
+    xtype: 'toolbar',
+    height: 40,
     width: '100%',
-    layout: 'hbox',
+    style: 'background: #252432',
     items: [{
-      flex: 1,
-      height: '100%',
-      xtype: 'mapleaflet'
-    }, {
-      flex: 1,
-      height: '100%',
-      xtype: 'mapleaflet'
+      xtype: 'label',
+      text: 'RIPPLES',
+      cls: 'logo'
+    }, '->', {
+      xtype: 'splitbutton',
+      height: 30,
+      text: 'Maps',
+      menu: [{
+        xtype: 'splitbutton',
+        text: 'Add/Remove Map',
+        plain: true,
+        menu: {
+          items: [{
+            text: 'Map 1',
+            name: 'map1',
+            handler: 'toogleMap'
+          }, {
+            text: 'Map 2',
+            name: 'map2',
+            handler: 'toogleMap'
+          }, {
+            text: 'Map 3',
+            name: 'map3',
+            handler: 'toogleMap'
+          }, {
+            text: 'Map 4',
+            name: 'map4',
+            handler: 'toogleMap'
+          }]
+        }
+      }]
     }]
   }, {
     xtype: 'container',
@@ -45,11 +73,35 @@ Ext.define('Ripples.view.home.Home', {
     layout: 'hbox',
     items: [{
       flex: 1,
+      itemId: 'map1',
       height: '100%',
+      hidden: false,
       xtype: 'mapleaflet'
     }, {
       flex: 1,
+      itemId: 'map2',
       height: '100%',
+      hidden: true,
+      xtype: 'mapleaflet'
+    }]
+  }, {
+    xtype: 'container',
+    flex: 1,
+    width: '100%',
+    hidden: true,
+    layout: 'hbox',
+    activeItems: 0,
+    items: [{
+      flex: 1,
+      height: '100%',
+      itemId: 'map3',
+      hidden: true,
+      xtype: 'mapleaflet'
+    }, {
+      flex: 1,
+      itemId: 'map4',
+      height: '100%',
+      hidden: true,
       xtype: 'mapleaflet'
     }]
   }]
