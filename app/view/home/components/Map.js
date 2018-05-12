@@ -101,15 +101,16 @@ Ext.define('Ripples.view.home.components.Map', {
         alert(context.options.strings.outsideMapBoundsMsg);
       }
     }).addTo(map);
+
     var now = new Date();
 
     var oneDay = 1000 * 60 * 60 * 24,
       startTimestamp = now.getTime() - oneDay + now.getTimezoneOffset() * 60 * 1000,
       startDate = new Date(startTimestamp); //previous day
     var overlays = this.getOverlays();
-    for (var id in L.GIBS_LAYERS) {
-      overlays[id] = new L.GIBSLayer(id, {date: startDate, transparent: true});
-    }
+    // for (var id in L.GIBS_LAYERS) {
+    //   overlays[id] = new L.GIBSLayer(id, {date: startDate, transparent: true});
+    // }
     this.setOverlays(overlays);
 
     L.control.layers(this.getBaseLayers(), this.getOverlays(), {autoZIndex: false}).addTo(map);

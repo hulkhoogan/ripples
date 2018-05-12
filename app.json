@@ -196,9 +196,11 @@
     },
     {
       "path": "/resources/js/L.Control.Layers.Minimap.js"
-    },  {
+    },
+    {
       "path": "/resources/js/GIBSMetadata.js"
-    },  {
+    },
+    {
       "path": "/resources/js/GIBSLayer.js"
     },
     {
@@ -209,6 +211,9 @@
     },
     {
       "path": "/resources/js/leaflet.contextmenu.js"
+    },
+    {
+      "path": "/resources/js/L.Map.Sync.js"
     },
     {
       "path": "app.js",

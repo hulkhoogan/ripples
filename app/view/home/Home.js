@@ -13,7 +13,8 @@ Ext.define('Ripples.view.home.Home', {
     'Ext.ux.LeafletMap',
     'Ripples.view.home.HomeController',
     'Ripples.view.home.HomeModel',
-    'Ripples.view.home.components.Map'
+    'Ripples.view.home.components.Map',
+    'Ripples.view.home.components.MapContainer'
   ],
 
   alias: 'widget.home',
@@ -42,28 +43,28 @@ Ext.define('Ripples.view.home.Home', {
       height: 30,
       text: 'Maps',
       menu: [{
-        xtype: 'splitbutton',
-        text: 'Add/Remove Map',
-        plain: true,
-        menu: {
-          items: [{
-            text: 'Map 1',
-            name: 'map1',
-            handler: 'toogleMap'
-          }, {
-            text: 'Map 2',
-            name: 'map2',
-            handler: 'toogleMap'
-          }, {
-            text: 'Map 3',
-            name: 'map3',
-            handler: 'toogleMap'
-          }, {
-            text: 'Map 4',
-            name: 'map4',
-            handler: 'toogleMap'
-          }]
-        }
+        // xtype: 'splitbutton',
+        // text: 'Add/Remove Map',
+        // plain: true,
+        // menu: {
+        // items: [{
+        text: 'Map 1',
+        name: 'map1',
+        handler: 'toogleMap'
+      }, {
+        text: 'Map 2',
+        name: 'map2',
+        handler: 'toogleMap'
+      }, {
+        text: 'Map 3',
+        name: 'map3',
+        handler: 'toogleMap'
+      }, {
+        text: 'Map 4',
+        name: 'map4',
+        handler: 'toogleMap'
+        // }]
+        // }
       }]
     }]
   }, {
@@ -76,13 +77,13 @@ Ext.define('Ripples.view.home.Home', {
       itemId: 'map1',
       height: '100%',
       hidden: false,
-      xtype: 'mapleaflet'
+      xtype: 'mapcontainer'
     }, {
       flex: 1,
       itemId: 'map2',
       height: '100%',
       hidden: true,
-      xtype: 'mapleaflet'
+      xtype: 'mapcontainer'
     }]
   }, {
     xtype: 'container',
@@ -96,13 +97,13 @@ Ext.define('Ripples.view.home.Home', {
       height: '100%',
       itemId: 'map3',
       hidden: true,
-      xtype: 'mapleaflet'
+      xtype: 'mapcontainer'
     }, {
       flex: 1,
       itemId: 'map4',
       height: '100%',
       hidden: true,
-      xtype: 'mapleaflet'
+      xtype: 'mapcontainer'
     }]
   }]
 });
