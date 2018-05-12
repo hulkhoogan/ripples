@@ -48,7 +48,12 @@ Ext.define('Ripples.view.home.components.MapContainer', {
     items: [{
       xtype: 'mapleaflet',
       width: '100%',
-      height: '100%'
+      height: '100%',
+      listeners: {
+        'mousemove': function () {
+          console.log('a');
+        }
+      }
     }]
   }]
 });

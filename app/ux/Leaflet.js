@@ -159,6 +159,7 @@ Ext.define('Ext.ux.LeafletMap', {
       map.on('zoomend', me.onZoomEnd, me);
       map.on('movestart', me.onMoveStart, me);
       map.on('moveend', me.onMoveEnd, me);
+      map.on('mousemove', me.onMouseMove,me)
       me.fireEvent('maprender', me, map, layers);
     }
   },
@@ -264,6 +265,14 @@ Ext.define('Ext.ux.LeafletMap', {
       tileLayers = this.getTileLayers();
 
     this.fireEvent('moveend', this, map, tileLayers);
+  },
+
+ // @private
+  onMouseMove: function () {
+    var map = this.getMap(),
+      tileLayers = this.getTileLayers();
+
+    this.fireEvent('mousemove', this, map, tileLayers);
   },
 
   // @private
