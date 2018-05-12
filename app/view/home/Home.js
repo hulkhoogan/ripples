@@ -43,11 +43,6 @@ Ext.define('Ripples.view.home.Home', {
       height: 30,
       text: 'Maps',
       menu: [{
-        // xtype: 'splitbutton',
-        // text: 'Add/Remove Map',
-        // plain: true,
-        // menu: {
-        // items: [{
         text: 'Map 1',
         name: 'map1',
         handler: 'toogleMap'
@@ -63,8 +58,6 @@ Ext.define('Ripples.view.home.Home', {
         text: 'Map 4',
         name: 'map4',
         handler: 'toogleMap'
-        // }]
-        // }
       }]
     }]
   }, {
