@@ -14,32 +14,26 @@ Ext.define('Ripples.view.home.components.MapContainer', {
 
   layout: 'hbox',
 
+  config: {
+    window: null
+  },
+
   items: [{
     xtype: 'panel',
     width: 50,
     height: '100%',
     items: [{
       xtype: 'button',
-      text: 'BaseMaps'
+      iconCls: 'x-fa fa-map',
+      handler: 'gibsMaps'
     }, {
       xtype: 'button',
-      text: 'Overlays'
-    }, {
-      xtype: 'button',
-      text: 'GIBS'
-    }, {
-      xtype: 'button',
-      text: 'invalidate size'
-    }, {
-      xtype: 'button',
-      text: 'Teste'
-    }, {
-      xtype: 'button',
-      text: 'Teste'
-    }, {
-      xtype: 'button',
-      text: 'Teste'
-    }]
+      iconCls: 'x-fa fa-refresh'
+    }],
+    defaults: {
+      width: 50,
+      height: 50
+    }
   }, {
     xtype: 'container',
     layout: 'card',
@@ -50,9 +44,7 @@ Ext.define('Ripples.view.home.components.MapContainer', {
       width: '100%',
       height: '100%',
       listeners: {
-        'mousemove': function () {
-          console.log('a');
-        }
+        'mousemove': 'onMouseMove'
       }
     }]
   }]

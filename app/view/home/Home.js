@@ -16,7 +16,7 @@ Ext.define('Ripples.view.home.Home', {
     'Ripples.view.home.components.Map',
     'Ripples.view.home.components.MapContainer'
   ],
-
+  
   alias: 'widget.home',
 
   viewModel: {

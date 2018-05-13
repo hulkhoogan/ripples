@@ -1,1 +1,14 @@
 $base-color: rgb(37, 36, 50);
+$button-default-background-color: #51505b;
+$button-toolbar-background-color: #51505b;
+$button-toolbar-background-color-pressed: #51505b;
+$button-toolbar-background-color-over: #51505b;
+$button-toolbar-color: white;
+
+.x-btn-default-small {
+  border: none !important;
+  background: #51505b !important;
+  .x-btn-inner {
+    color: white !important;
+  }
+}

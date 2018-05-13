@@ -10,9 +10,7 @@ Ext.define('Ripples.Application', {
     }
   },
 
-  stores: [
-    // TODO: add global / shared stores here
-  ],
+  stores: [],
 
   launch: function () {
     // TODO - Launch the application

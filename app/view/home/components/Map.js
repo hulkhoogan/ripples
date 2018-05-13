@@ -10,12 +10,21 @@ Ext.define('Ripples.view.home.components.Map', {
   config: {
     baseLayers: null,
     overlays: null,
-    originLat: 41.184774,
-    originLng: -8.704476,
-    originZoom: 12,
+    crosshair: null,
 
-    activeLayer: 'Open Street Map',
-    activeOverLay: 'Nautical Charts'
+    mapOptions: {
+      zoom: 6,
+      center: [41.184774, -8.704476]
+    },
+
+    gibsLayers: {},
+
+    markers: {},
+    updates: {},
+    tails: {},
+
+    activeLayer: 'ESRI Aerial',
+    activeOverLay: 'KML Layer'
   },
 
   useLocation: false,
@@ -113,7 +122,7 @@ Ext.define('Ripples.view.home.components.Map', {
     // }
     this.setOverlays(overlays);
 
-    L.control.layers(this.getBaseLayers(), this.getOverlays(), {autoZIndex: false}).addTo(map);
+    L.control.layers(this.getBaseLayers(), this.getOverlays(), {autoZIndex: true}).addTo(map);
 
     if (this.getActiveLayer()) {
       map.addLayer(this.getBaseLayers()[this.getActiveLayer()]);

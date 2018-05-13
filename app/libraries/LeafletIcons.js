@@ -13,6 +13,10 @@ Ext.define('Ripples.libraries.LeafletIcons', {
     url: 'icons/ico_auv.png',
     type: 'sys'
   }, {
+    itemId: 'asvIcon',
+    url: 'icons/ico_usv.png',
+    type: 'sys'
+  }, {
     itemId: 'unknownIcon',
     url: 'icons/ico_unknown.png',
     type: 'sys'
@@ -62,6 +66,69 @@ Ext.define('Ripples.libraries.LeafletIcons', {
     type: 'wpt'
   }],
 
+  getIconByImcid: function (imcId) {
+    //
+    // function sysIconFromName (name) {
+    //   switch (name.toUpperCase()) {
+    //     case 'UUV':
+    //       return auvIcon;
+    //     case 'UAV':
+    //       return uavIcon;
+    //     case 'CCU':
+    //       return ccuIcon;
+    //     case 'USV':
+    //       return usvIcon;
+    //     case 'STATICSENSOR':
+    //     case 'MOBILESENSOR':
+    //       return spotIcon;
+    //     case 'MANNED_SHIP':
+    //       return shipIcon;
+    //     case 'MANNED_AIRPLANE':
+    //       return planeIcon;
+    //     case 'MANNED_CAR':
+    //     case 'UGV':
+    //     case 'PERSON':
+    //     default:
+    //       return unknownIcon;
+    //   }
+    // }
+
+    var sys_selector = 0xE000,
+      vtype_selector = 0x1c00;
+
+    if (imcId >= 0x8401 && imcId <= 0x841a)
+      return this.getIconById('spotIcon');
+
+    // External System
+    if (imcId > 0x0000 + 0xFFFF)
+      return this.getIconById('extSysIcon');
+
+    var sys_type = (imcId & sys_selector) >> 13;
+
+    switch (sys_type) {
+      case 0:
+        return this.getIconById('auvIcon');
+        break;
+      case 1:
+        switch ((imcId & vtype_selector) >> 10) {
+          case 0:
+            return this.getIconById('auvIcon');
+          case 1:
+            return this.getIconById('unknownIcon'); // rov
+          case 2:
+            return this.getIconById('asvIcon'); // asv
+          case 3:
+            return this.getIconById('uavIcon');
+          default:
+            return this.getIconById('unknownIcon'); // uxv
+        }
+      case 2:
+        return this.getIconById('ccuIcon');
+      default:
+        return this.getIconById('unknownIcon');
+    }
+  },
+
   getIconById: function (itemId) {
     var icon = null;
     this.icons.forEach(function (item) {
@@ -73,9 +140,8 @@ Ext.define('Ripples.libraries.LeafletIcons', {
       var leafletIcon;
       switch (icon.type) {
         case 'sys':
-          leafletIcon = L.Icon.extend({
+          var sys = L.Icon.extend({
             options: {
-              iconUrl: Ext.getResourcePath(icon.url),
               shadowUrl: Ext.getResourcePath('icons/shadow.png'),
               iconSize: [22, 32],
               shadowSize: [24, 24],
@@ -84,11 +150,13 @@ Ext.define('Ripples.libraries.LeafletIcons', {
               popupAnchor: [0, -32]
             }
           });
+          leafletIcon = new sys({
+            iconUrl: Ext.getResourcePath(icon.url)
+          });
           break;
         case 'wpt':
-          leafletIcon = L.Icon.extend({
+          var wpt = L.Icon.extend({
             options: {
-              iconUrl: Ext.getResourcePath(icon.url),
               shadowUrl: Ext.getResourcePath('icons/shadow.png'),
               iconSize: [12, 12],
               shadowSize: [0, 0],
@@ -96,6 +164,9 @@ Ext.define('Ripples.libraries.LeafletIcons', {
               shadowAnchor: [6, 6],
               popupAnchor: [0, 0]
             }
+          });
+          leafletIcon = new wpt({
+            iconUrl: Ext.getResourcePath(icon.url)
           });
           break;
         default: {}
@@ -105,4 +176,5 @@ Ext.define('Ripples.libraries.LeafletIcons', {
       console.error('Unknown icon \'' + itemId + '\'.');
     }
   }
+
 });
