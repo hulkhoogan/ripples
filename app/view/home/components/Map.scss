@@ -3,3 +3,10 @@
   font-weight: bold;
   color: white;
 }
+
+.plot {
+  position: absolute;
+  bottom: 40px;
+  right: 10px;
+  z-index: 90001;
+}

@@ -30,6 +30,11 @@ Ext.define('Ripples.view.home.HomeModel', {
     gibs: {
       model: 'GIBS',
       autoLoad: true
+    },
+
+    profiles: {
+      model: 'Profiles',
+      autoLoad: true
     }
   },
 

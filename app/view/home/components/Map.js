@@ -13,7 +13,7 @@ Ext.define('Ripples.view.home.components.Map', {
     crosshair: null,
 
     mapOptions: {
-      zoom: 6,
+      zoom: 12,
       center: [41.184774, -8.704476]
     },
 
