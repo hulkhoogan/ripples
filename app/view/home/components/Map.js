@@ -24,6 +24,7 @@ Ext.define('Ripples.view.home.components.Map', {
     tails: {},
     plans: {},
     etaMarkers: {},
+    ships: {},
 
     activeLayer: 'ESRI Aerial',
     activeOverLay: 'KML Layer'

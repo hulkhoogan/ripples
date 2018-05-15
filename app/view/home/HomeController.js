@@ -40,8 +40,8 @@ Ext.define('Ripples.view.home.HomeController', {
     ripplesRef.child('assets').on('child_changed', this.updateAsset);
     ripplesRef.child('assets').on('value', this.updateAsset);
     ripplesRef.child('assets').on('child_added', this.updateAsset);
-    // ripplesRef.child('ships').on('child_changed', updateShip);
-    // ripplesRef.child('ships').on('child_added', updateShip);
+    ripplesRef.child('ships').on('child_changed', this.updateShip);
+    ripplesRef.child('ships').on('child_added', this.updateShip);
     ripplesRef.child('ships').on('value', this.updateAsset);
   },
 
@@ -393,8 +393,6 @@ Ext.define('Ripples.view.home.HomeController', {
       }).show();
       cmp.setWindow(newWindow);
     }
-  },
-
-
+  }
 
 });
