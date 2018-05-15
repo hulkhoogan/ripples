@@ -15,12 +15,15 @@ Ext.define('Ripples.view.home.HomeController', {
     'Ext.chart.series.Line',
     'Ext.data.ArrayStore',
     'Ext.data.JsonStore',
+    'Ext.form.field.Date',
     'Ext.form.field.Text',
     'Ext.grid.Panel',
     'Ext.grid.column.Check',
+    'Ext.grid.plugin.CellEditing',
     'Ext.layout.container.Fit',
     'Ext.layout.container.VBox',
     'Ext.panel.Panel',
+    'Ext.util.Format',
     'Ext.window.Window'
   ],
 
@@ -352,6 +355,13 @@ Ext.define('Ripples.view.home.HomeController', {
           border: false,
           title: false,
           hideHeaders: true,
+
+          plugins: [
+            Ext.create('Ext.grid.plugin.CellEditing', {
+              clicksToEdit: 1
+            })
+          ],
+
           selModel: {
             checkOnly: false,
             injectCheckbox: 'last',
@@ -361,6 +371,18 @@ Ext.define('Ripples.view.home.HomeController', {
           columns: [{
             dataIndex: 'title',
             flex: 1
+          }, {
+            dataIndex: '',
+            width: 100,
+            renderer: function (field) {
+              var formated = Ext.util.Format.date(field, 'd/m/Y');
+              return formated;
+            },
+            editor: new Ext.form.DateField({
+              format: 'd-m-Y',
+              minValue: '01/01/06',
+              dateFormat: 'd-m-Y'
+            })
           }],
           store: gibsStore,
 

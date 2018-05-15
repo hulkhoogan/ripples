@@ -2,7 +2,7 @@ Ext.define('Ripples.libraries.LeafletLayers', {
 
   layers: [{
     itemId: 'kmlLayer',
-    url: Ext.getResourcePath('kml/file.kmz'),
+    url: 'http://ripples.lsts.pt/kml/file.kmz',
     type: 'KML',
     options: {
       async: true
