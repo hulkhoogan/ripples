@@ -70,13 +70,14 @@ Ext.define('Ripples.view.home.HomeController', {
     var itemId = '#' + button.name,
       cmp = this.getView().down(itemId),
       container = (button.name === 'map3' || button.name === 'map4'),
+      containerTop = (button.name === 'map1' || button.name === 'map2'),
       me = this,
       model = this.getViewModel();
 
     if (cmp.hidden) {
       cmp.show();
       model.get('activeMaps')[itemId] = cmp;
-      if (container) {
+      if (container || containerTop) {
         var cmpContainer = cmp.up();
         cmpContainer.show();
         cmpContainer.activeItems = cmpContainer.activeItems + 1;
@@ -85,7 +86,7 @@ Ext.define('Ripples.view.home.HomeController', {
     else {
       cmp.hide();
       delete model.get('activeMaps')[itemId];
-      if (container) {
+      if (container || containerTop) {
         var cmpContainer = cmp.up();
         cmpContainer.activeItems = cmpContainer.activeItems - 1;
         if (cmpContainer.activeItems === 0) {
@@ -180,9 +181,9 @@ Ext.define('Ripples.view.home.HomeController', {
 
         if (profile) {
           var d = new Date(Number(profile.getData().timestamp)),
-            date = ('0' + d.getDate()).slice(-2) + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' +
-              d.getFullYear() + ' ' + ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2);
+            date = ('0' + d.getHours()).slice(-2) + 'h:' + ('0' + d.getMinutes()).slice(-2) + 'm';
           marker.on('mouseover', function (e) {
+            if (marker.plot) marker.plot.destroy();
             marker.plot = Ext.create('Ext.panel.Panel', {
               title: name + ' | ' + date,
               width: 300,
@@ -267,8 +268,8 @@ Ext.define('Ripples.view.home.HomeController', {
       tails[name].addTo(map);
     }
     tails[name].addLatLng(pos);
-    if (tails[name].getLatLngs().length > 120)
-      tails[name].spliceLatLngs(0, 1);
+    // if (tails[name].getLatLngs().length > 120)
+    //   tails[name].spliceLatLngs(0, 1);
 
     cmp.setTails(tails);
   },
@@ -279,19 +280,26 @@ Ext.define('Ripples.view.home.HomeController', {
       activeMaps = model.get('activeMaps'),
       systems = this.getStore('systems');
 
-    records.forEach(function (element, index, array) {
-      var data = element.getData(),
-        lat = data.lat,
-        long = data.lon,
-        updated = new Date(data.timestamp),
-        imc_id = data.imc_id,
-        name = systems.getById(imc_id).getData().name;
-      Ext.iterate(activeMaps, function (key, value) {
-        var map = value.down('leafletmap').getMap(),
-          cmp = value.down('leafletmap');
-        me.addToTail(name, lat, long, map, cmp);
+    if (systems.isLoaded()) {
+      records.forEach(function (element, index, array) {
+        var data = element.getData(),
+          lat = data.lat,
+          long = data.lon,
+          updated = new Date(data.timestamp),
+          imc_id = data.imc_id,
+          name = systems.getById(imc_id).getData().name;
+        Ext.iterate(activeMaps, function (key, value) {
+          var map = value.down('leafletmap').getMap(),
+            cmp = value.down('leafletmap');
+          me.addToTail(name, lat, long, map, cmp);
+        });
       });
-    });
+    }
+    else {
+      Ext.global.setTimeout(function () {
+        me.positionsLoad(store, records);
+      }, 400);
+    }
   },
 
   gibsMaps: function (button) {

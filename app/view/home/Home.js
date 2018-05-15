@@ -65,6 +65,7 @@ Ext.define('Ripples.view.home.Home', {
     flex: 1,
     width: '100%',
     layout: 'hbox',
+    activeItems: 1,
     items: [{
       flex: 1,
       itemId: 'map1',
