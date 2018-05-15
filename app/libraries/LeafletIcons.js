@@ -66,32 +66,33 @@ Ext.define('Ripples.libraries.LeafletIcons', {
     type: 'wpt'
   }],
 
+  getIconByName: function (name) {
+    switch (name.toUpperCase()) {
+      case 'UUV':
+        return this.getIconById('auvIcon');
+      case 'UAV':
+        return this.getIconById('uavIcon');
+      case 'CCU':
+        return this.getIconById('ccuIcon');
+      case 'USV':
+        return this.getIconById('usvIcon');
+      case 'STATICSENSOR':
+      case 'MOBILESENSOR':
+        return this.getIconById('spotIcon');
+      case 'MANNED_SHIP':
+        return this.getIconById('shipIcon');
+      case 'MANNED_AIRPLANE':
+        return this.getIconById('planeIcon');
+      case 'MANNED_CAR':
+      case 'UGV':
+      case 'PERSON':
+      default:
+        return this.getIconById('unknownIcon');
+    }
+
+  },
+
   getIconByImcid: function (imcId) {
-    //
-    // function sysIconFromName (name) {
-    //   switch (name.toUpperCase()) {
-    //     case 'UUV':
-    //       return auvIcon;
-    //     case 'UAV':
-    //       return uavIcon;
-    //     case 'CCU':
-    //       return ccuIcon;
-    //     case 'USV':
-    //       return usvIcon;
-    //     case 'STATICSENSOR':
-    //     case 'MOBILESENSOR':
-    //       return spotIcon;
-    //     case 'MANNED_SHIP':
-    //       return shipIcon;
-    //     case 'MANNED_AIRPLANE':
-    //       return planeIcon;
-    //     case 'MANNED_CAR':
-    //     case 'UGV':
-    //     case 'PERSON':
-    //     default:
-    //       return unknownIcon;
-    //   }
-    // }
 
     var sys_selector = 0xE000,
       vtype_selector = 0x1c00;

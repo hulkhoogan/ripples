@@ -3,6 +3,7 @@ Ext.define('Ripples.view.home.HomeController', {
   alias: 'controller.home',
 
   mixins: [
+    'Ripples.view.home.FireBase',
     'Ripples.libraries.LeafletIcons',
     'Ext.chart.interactions.ItemHighlight'
   ],
@@ -25,7 +26,8 @@ Ext.define('Ripples.view.home.HomeController', {
 
   init: function () {
     var model = this.getViewModel(),
-      store = this.getStore('active');
+      store = this.getStore('active'),
+      ripplesRef = new Firebase('https://neptus.firebaseio.com/');
     model.get('activeMaps')['#map1'] = this.getView().down('#map1');
     this.crosshairIcon = L.icon({
       iconUrl: '/resources/images/crosshair.png',
@@ -35,6 +37,12 @@ Ext.define('Ripples.view.home.HomeController', {
     Ext.global.setInterval(function () {
       store.load();
     }, 60000);
+    ripplesRef.child('assets').on('child_changed', this.updateAsset);
+    ripplesRef.child('assets').on('value', this.updateAsset);
+    ripplesRef.child('assets').on('child_added', this.updateAsset);
+    // ripplesRef.child('ships').on('child_changed', updateShip);
+    // ripplesRef.child('ships').on('child_added', updateShip);
+    ripplesRef.child('ships').on('value', this.updateAsset);
   },
 
   syncMaps: function (cmp) {
@@ -385,6 +393,8 @@ Ext.define('Ripples.view.home.HomeController', {
       }).show();
       cmp.setWindow(newWindow);
     }
-  }
+  },
+
+
 
 });
