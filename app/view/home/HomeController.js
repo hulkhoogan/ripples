@@ -230,11 +230,11 @@ Ext.define('Ripples.view.home.HomeController', {
                 now = new Date(),
                 oneDay = 1000 * 60 * 60 * 24, // milliseconds in one day
                 startTimestamp = now.getTime() - oneDay + now.getTimezoneOffset() * 60 * 1000 * 60 * 1000,
-                startDate = new Date(startTimestamp); //previous day
+                startDate = new Date(startTimestamp);
               if (data.day) {
-                console.log(Date.parse(new Date(data.day)));
-                startDate = Date.parse(new Date(data.day));
+                startDate = (new Date(data.day));
               }
+
               var layer = new L.GIBSLayer(data.title, {
                 date: startDate,
                 transparent: false
