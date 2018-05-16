@@ -199,7 +199,10 @@ Ext.define('Ripples.view.home.HomeController', {
           plugins: [
             Ext.create('Ext.grid.plugin.CellEditing', {clicksToEdit: 1})
           ],
-
+          selModel: {
+            selType: 'checkboxmodel',
+            checkOnly: true
+          },
           columns: [{
             dataIndex: 'title',
             flex: 1
@@ -218,39 +221,30 @@ Ext.define('Ripples.view.home.HomeController', {
               else
                 return;
             }
-          }, {
-            xtype: 'checkcolumn',
-            width: 30,
-            listeners: {
-              checkchange: function (el, rowIndex, checked, record, e, eOpts) {
-                console.log(arguments);
-              }
-            }
           }],
           store: gibsStore,
 
           listeners: {
-            check: function (view, record) {
+            select: function (view, record) {
               var data = record.getData(),
                 now = new Date(),
                 oneDay = 1000 * 60 * 60 * 24, // milliseconds in one day
                 startTimestamp = now.getTime() - oneDay + now.getTimezoneOffset() * 60 * 1000 * 60 * 1000,
-                startDate = new Date(startTimestamp), //previous day
-                layer = new L.GIBSLayer(data.title,
-                  {
-                    date: startDate,
-                    transparent: false
-                  });
+                startDate = new Date(startTimestamp); //previous day
+              if (data.day) {
+                console.log(Date.parse(new Date(data.day)));
+                startDate = Date.parse(new Date(data.day));
+              }
+              var layer = new L.GIBSLayer(data.title, {
+                date: startDate,
+                transparent: false
+              });
               gibsLayers[data.title] = layer;
               map.setGibsLayers(gibsLayers);
               map.getMap().addLayer(layer, true);
               layer.bringToFront();
             },
-            edit: function (view, cell) {
-              this.getSelectionModel().deselectAll();
-              this.setSelection(cell.record);
-            },
-            decheck: function (view, record) {
+            deselect: function (view, record) {
               var data = record.getData(),
                 layer = gibsLayers[data.title];
               if (layer) {
