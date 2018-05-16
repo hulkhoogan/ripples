@@ -129,7 +129,7 @@ Ext.define('Ripples.view.home.StoresLoads', {
         marker.on('mouseover', function (e) {
           if (marker.plot) marker.plot.destroy();
           marker.plot = Ext.create('Ext.panel.Panel', {
-            title: name + ' | ' + date,
+            title: data.source + ' | ' + date,
             width: 300,
             height: 300,
             cls: 'plot',
