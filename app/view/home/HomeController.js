@@ -20,6 +20,7 @@ Ext.define('Ripples.view.home.HomeController', {
     'Ext.form.field.Text',
     'Ext.grid.Panel',
     'Ext.grid.column.Check',
+    'Ext.grid.column.Date',
     'Ext.grid.plugin.CellEditing',
     'Ext.layout.container.Fit',
     'Ext.layout.container.VBox',
@@ -196,37 +197,40 @@ Ext.define('Ripples.view.home.HomeController', {
           hideHeaders: true,
 
           plugins: [
-            Ext.create('Ext.grid.plugin.CellEditing', {
-              clicksToEdit: 1
-            })
+            Ext.create('Ext.grid.plugin.CellEditing', {clicksToEdit: 1})
           ],
 
-          selModel: {
-            checkOnly: false,
-            injectCheckbox: 'last',
-            mode: 'SIMPLE'
-          },
-          selType: 'checkboxmodel',
           columns: [{
             dataIndex: 'title',
             flex: 1
           }, {
-            dataIndex: '',
-            width: 100,
-            renderer: function (field) {
-              var formated = Ext.util.Format.date(field, 'd/m/Y');
-              return formated;
+            width: 130,
+            editable: true,
+            allowBlank: false,
+            dataIndex: 'day',
+            editor: {
+              xtype: 'datefield',
+              format: 'd-m-Y'
             },
-            editor: new Ext.form.DateField({
-              format: 'd-m-Y',
-              minValue: '01/01/06',
-              dateFormat: 'd-m-Y'
-            })
+            renderer: function (date) {
+              if (date)
+                return Ext.Date.format(new Date(date), 'd-m-Y');
+              else
+                return;
+            }
+          }, {
+            xtype: 'checkcolumn',
+            width: 30,
+            listeners: {
+              checkchange: function (el, rowIndex, checked, record, e, eOpts) {
+                console.log(arguments);
+              }
+            }
           }],
           store: gibsStore,
 
           listeners: {
-            select: function (view, record) {
+            check: function (view, record) {
               var data = record.getData(),
                 now = new Date(),
                 oneDay = 1000 * 60 * 60 * 24, // milliseconds in one day
@@ -242,15 +246,18 @@ Ext.define('Ripples.view.home.HomeController', {
               map.getMap().addLayer(layer, true);
               layer.bringToFront();
             },
-            edit: function () {
-              console.log(arguments);
+            edit: function (view, cell) {
+              this.getSelectionModel().deselectAll();
+              this.setSelection(cell.record);
             },
-            deselect: function (view, record) {
+            decheck: function (view, record) {
               var data = record.getData(),
                 layer = gibsLayers[data.title];
-              map.getMap().removeLayer(layer);
-              delete gibsLayers[data.title];
-              map.setGibsLayers(gibsLayers);
+              if (layer) {
+                map.getMap().removeLayer(layer);
+                delete gibsLayers[data.title];
+                map.setGibsLayers(gibsLayers);
+              }
             }
           }
         }]
