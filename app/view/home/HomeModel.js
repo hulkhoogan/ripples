@@ -9,7 +9,7 @@ Ext.define('Ripples.view.home.HomeModel', {
   stores: {
     active: {
       model: 'Active',
-      autoLoad: true,
+      autoLoad: false,
       listeners: {
         load: 'activeLoad'
       }
@@ -21,7 +21,7 @@ Ext.define('Ripples.view.home.HomeModel', {
 
     positions: {
       model: 'Positions',
-      autoLoad: true,
+      autoLoad: false,
       listeners: {
         load: 'positionsLoad'
       }
@@ -34,7 +34,11 @@ Ext.define('Ripples.view.home.HomeModel', {
 
     profiles: {
       model: 'Profiles',
-      autoLoad: true
+      autoLoad: false,
+
+      listeners: {
+        load: 'profilesLoad'
+      }
     }
   },
 

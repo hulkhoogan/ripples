@@ -5,6 +5,7 @@ Ext.define('Ripples.view.home.HomeController', {
   mixins: [
     'Ripples.view.home.FireBase',
     'Ripples.libraries.LeafletIcons',
+    'Ripples.view.home.StoresLoads',
     'Ext.chart.interactions.ItemHighlight'
   ],
 
@@ -30,32 +31,48 @@ Ext.define('Ripples.view.home.HomeController', {
   init: function () {
     var model = this.getViewModel(),
       store = this.getStore('active'),
-      ripplesRef = new Firebase('https://neptus.firebaseio.com/');
+      storePositions = this.getStore('positions'),
+      ripplesRef = new Firebase('https://neptus.firebaseio.com/'),
+      me = this;
+
+    me.getView().down('#map2').hide();
+    me.getView().down('#map3').hide();
+    me.getView().down('#map4').hide();
+    me.getView().down('#map4').up().hide();
+
     model.get('activeMaps')['#map1'] = this.getView().down('#map1');
-    console.log(this.getView().down('#map2'));
+    model.set('maps', {
+      '#map1': this.getView().down('#map1'),
+      '#map2': this.getView().down('#map2'),
+      '#map3': this.getView().down('#map3'),
+      '#map4': this.getView().down('#map4')
+    });
     this.crosshairIcon = L.icon({
       iconUrl: '/resources/images/crosshair.png',
-      iconSize: [20, 20], // size of the icon
-      iconAnchor: [10, 10] // point of the icon which will correspond to marker's location
+      iconSize: [20, 20],
+      iconAnchor: [10, 10]
     });
-    Ext.global.setInterval(function () {
-      store.load();
-    }, 60000);
+
     ripplesRef.child('assets').on('child_changed', this.updateAsset);
     ripplesRef.child('assets').on('value', this.updateAsset);
     ripplesRef.child('assets').on('child_added', this.updateAsset);
     ripplesRef.child('ships').on('child_changed', this.updateShip);
     ripplesRef.child('ships').on('child_added', this.updateShip);
     ripplesRef.child('ships').on('value', this.updateAsset);
+
+    store.load();
+    storePositions.load();
+
+    Ext.global.setInterval(function () {
+      store.load();
+    }, 60000);
   },
 
   syncMaps: function (cmp) {
-    var view = cmp.getView(),
+    let view = cmp.getView(),
       model = this.getViewModel(),
       activeMaps = model.get('activeMaps'),
-      count = 0,
-      store = this.getStore('active'),
-      storePositions = this.getStore('positions');
+      count = 0;
 
     Ext.iterate(activeMaps, function (key, value) {
       value.down('leafletmap').getMap().invalidateSize();
@@ -73,8 +90,6 @@ Ext.define('Ripples.view.home.HomeController', {
         });
       });
     }
-    this.activeLoad(store, store.getData().items);
-    this.positionsLoad(storePositions, storePositions.getData().items);
 
   },
 
@@ -135,183 +150,6 @@ Ext.define('Ripples.view.home.HomeController', {
       }
     });
 
-  },
-
-  activeLoad: function (store, recs) {
-    var me = this,
-      model = this.getViewModel(),
-      activeMaps = model.get('activeMaps'),
-      profiles = this.getStore('profiles');
-
-    recs.forEach(function (element, index, array) {
-      var data = element.getData(),
-        coords = data.coordinates,
-        name = data.name,
-        updated = new Date(data.updated_at),
-        ic = me.getIconByImcid(data.imcid),
-        mins = (new Date() - updated) / 1000 / 60,
-        ellapsed = Math.floor(mins) + ' mins ago';
-
-      if (mins > 120) {
-        ellapsed = Math.floor(mins / 60) + ' hours ago';
-      }
-      if (mins > 60 * 24 * 2) {
-        ellapsed = Math.floor(mins / 60 / 24) + ' days ago';
-      }
-      Ext.iterate(activeMaps, function (key, value) {
-        var map = value.down('leafletmap').getMap(),
-          cmp = value.down('leafletmap'),
-          markers = cmp.getMarkers(),
-          updates = cmp.getUpdates();
-        if (markers[name] == undefined) {
-          updates[name] = updated;
-          markers[name] = L.marker(coords, {
-            icon: ic
-          });
-          markers[name].bindPopup('<b>' + name + '</b><br/>'
-            + coords[0].toFixed(6) + ', '
-            + coords[1].toFixed(6) + '<hr/>'
-            + updated.toLocaleString() + '<br/>(' + ellapsed
-            + ')');
-          markers[name].addTo(map);
-        } else {
-          if (updates[name] <= updated) {
-            markers[name].setLatLng(new L.LatLng(coords[0],
-              coords[1]));
-            markers[name].bindPopup('<b>' + name + '</b><br/>'
-              + coords[0].toFixed(6) + ', '
-              + coords[1].toFixed(6) + '<hr/>'
-              + updated.toLocaleString() + '<br/>('
-              + ellapsed + ')');
-            updates[name] = updated;
-            me.addToTail(name, coords[0], coords[1], map, cmp);
-          }
-        }
-
-        var profile = profiles.getById(name),
-          marker = markers[name];
-
-        if (profile) {
-          var d = new Date(Number(profile.getData().timestamp)),
-            date = ('0' + d.getHours()).slice(-2) + 'h:' + ('0' + d.getMinutes()).slice(-2) + 'm';
-          marker.on('mouseover', function (e) {
-            if (marker.plot) marker.plot.destroy();
-            marker.plot = Ext.create('Ext.panel.Panel', {
-              title: name + ' | ' + date,
-              width: 300,
-              height: 300,
-              cls: 'plot',
-              renderTo: cmp.el.dom,
-              layout: 'fit',
-              items: [{
-                xtype: 'chart',
-                style: {
-                  'background': '#fff'
-                },
-                animate: true,
-                shadow: false,
-                store: Ext.create('Ext.data.JsonStore', {
-                  fields: ['depth', 'value'],
-                  data: profile.getData().samples
-                }),
-                axes: [{
-                  type: 'numeric',
-                  position: 'left',
-                  title: 'Depth',
-                  grid: true,
-                  label: {
-                    renderer: function (v) {return v + 'm'; }
-                  }
-                }, {
-                  type: 'numeric',
-                  position: 'bottom',
-                  title: 'Temperature',
-                  label: {
-                    renderer: function (v) { return v + 'º'; }
-                  }
-                }],
-                series: [{
-                  type: 'line',
-                  xField: 'depth',
-                  yField: ['value'],
-                  title: ['Depth', 'Temp'],
-                  style: {
-                    'stroke-width': 4
-                  },
-                  markerConfig: {
-                    radius: 4
-                  },
-                  highlight: {
-                    fill: '#000',
-                    radius: 5,
-                    'stroke-width': 2,
-                    stroke: '#fff'
-                  },
-                  tips: {
-                    trackMouse: true,
-                    style: 'background: #FFF',
-                    height: 20,
-                    showDelay: 0,
-                    dismissDelay: 0,
-                    hideDelay: 0
-                  }
-                }]
-              }]
-            });
-          });
-          marker.on('mouseout', function (e) {
-            if (marker.plot) marker.plot.destroy();
-          });
-        }
-
-        cmp.setMarkers(markers);
-        cmp.setUpdates(updates);
-      });
-    });
-
-  },
-
-  addToTail: function (name, lat, lon, map, cmp) {
-    var pos = new L.LatLng(lat, lon),
-      tails = cmp.getTails();
-
-    if (tails[name] == undefined) {
-      tails[name] = L.polyline({});
-      tails[name].addTo(map);
-    }
-    tails[name].addLatLng(pos);
-    // if (tails[name].getLatLngs().length > 120)
-    //   tails[name].spliceLatLngs(0, 1);
-
-    cmp.setTails(tails);
-  },
-
-  positionsLoad: function (store, records) {
-    var me = this,
-      model = this.getViewModel(),
-      activeMaps = model.get('activeMaps'),
-      systems = this.getStore('systems');
-
-    if (systems.isLoaded()) {
-      records.forEach(function (element, index, array) {
-        var data = element.getData(),
-          lat = data.lat,
-          long = data.lon,
-          updated = new Date(data.timestamp),
-          imc_id = data.imc_id,
-          name = systems.getById(imc_id).getData().name;
-        Ext.iterate(activeMaps, function (key, value) {
-          var map = value.down('leafletmap').getMap(),
-            cmp = value.down('leafletmap');
-          me.addToTail(name, lat, long, map, cmp);
-        });
-      });
-    }
-    else {
-      Ext.global.setTimeout(function () {
-        me.positionsLoad(store, records);
-      }, 400);
-    }
   },
 
   gibsMaps: function (button) {

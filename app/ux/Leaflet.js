@@ -64,9 +64,22 @@ Ext.define('Ext.ux.LeafletMap', {
     }
   },
 
+  listeners: {
+    afterrender: function () {
+      this.onBoxReady();
+    }
+  },
+
   onBoxReady: function () {
-    this.callParent(arguments);
-    this.renderMap();
+    if (!this.renderedMap) {
+      this.renderedMap = true;
+
+      this.callParent(arguments);
+      this.renderMap();
+    }
+    else {
+      this.getMap().invalidateSize();
+    }
   },
 
   onTouchStart: function (e) {

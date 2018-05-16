@@ -3,7 +3,7 @@ Ext.define('Ripples.view.home.FireBase', {
   updateAsset: function (snapshot) {
     var me = Ripples.getApplication().getMainView().down('home').lookupController(),
       model = me.getViewModel(),
-      activeMaps = model.get('activeMaps');
+      activeMaps = model.get('maps');
 
     Ext.iterate(activeMaps, function (key, value) {
       var map = value.down('leafletmap').getMap(),
@@ -97,7 +97,7 @@ Ext.define('Ripples.view.home.FireBase', {
   updateShip: function (snapshot) {
     var me = Ripples.getApplication().getMainView().down('home').lookupController(),
       model = me.getViewModel(),
-      activeMaps = model.get('activeMaps');
+      activeMaps = model.get('maps');
     Ext.iterate(activeMaps, function (key, value) {
       var map = value.down('leafletmap').getMap(),
         cmp = value.down('leafletmap'),

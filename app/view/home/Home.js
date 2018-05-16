@@ -16,7 +16,7 @@ Ext.define('Ripples.view.home.Home', {
     'Ripples.view.home.components.Map',
     'Ripples.view.home.components.MapContainer'
   ],
-  
+
   alias: 'widget.home',
 
   viewModel: {
@@ -70,33 +70,28 @@ Ext.define('Ripples.view.home.Home', {
       flex: 1,
       itemId: 'map1',
       height: '100%',
-      hidden: false,
       xtype: 'mapcontainer'
     }, {
       flex: 1,
       itemId: 'map2',
       height: '100%',
-      hidden: true,
       xtype: 'mapcontainer'
     }]
   }, {
     xtype: 'container',
     flex: 1,
     width: '100%',
-    hidden: true,
     layout: 'hbox',
     activeItems: 0,
     items: [{
       flex: 1,
       height: '100%',
       itemId: 'map3',
-      hidden: true,
       xtype: 'mapcontainer'
     }, {
       flex: 1,
       itemId: 'map4',
       height: '100%',
-      hidden: true,
       xtype: 'mapcontainer'
     }]
   }]
