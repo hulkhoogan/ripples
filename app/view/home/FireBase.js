@@ -158,7 +158,7 @@ Ext.define('Ripples.view.home.FireBase', {
       if (new Date().getTime() - date > 1000 * 60 * 20)
         return;
 
-      this.addToTail(name, lat, lon);
+      me.addToTail(name, lat, lon, map, cmp);
 
       var pos = new L.LatLng(lat, lon);
 
@@ -170,7 +170,7 @@ Ext.define('Ripples.view.home.FireBase', {
       }
       else {
         ships[name] = L.trackSymbol(pos, {
-          icon: shipIcon,
+          icon: me.getIconById('shipIcon'),
           fill: true,
           fillColor: fillColor,
           fillOpacity: 0.7,

@@ -39,6 +39,7 @@ Ext.define('Ripples.view.home.HomeModel', {
   },
 
   data: {
-    activeMaps: {}
+    activeMaps: {},
+    maps: {}
   }
 });

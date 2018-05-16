@@ -196,6 +196,9 @@
       "path": "/resources/js/KML.js"
     },
     {
+      "path": "/resources/js/tracksymbol.js"
+    },
+    {
       "path": "/resources/js/L.Control.Layers.Minimap.js"
     },
     {

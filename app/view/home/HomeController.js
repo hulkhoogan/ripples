@@ -32,6 +32,7 @@ Ext.define('Ripples.view.home.HomeController', {
       store = this.getStore('active'),
       ripplesRef = new Firebase('https://neptus.firebaseio.com/');
     model.get('activeMaps')['#map1'] = this.getView().down('#map1');
+    console.log(this.getView().down('#map2'));
     this.crosshairIcon = L.icon({
       iconUrl: '/resources/images/crosshair.png',
       iconSize: [20, 20], // size of the icon
@@ -402,6 +403,9 @@ Ext.define('Ripples.view.home.HomeController', {
               map.setGibsLayers(gibsLayers);
               map.getMap().addLayer(layer, true);
               layer.bringToFront();
+            },
+            edit: function () {
+              console.log(arguments);
             },
             deselect: function (view, record) {
               var data = record.getData(),

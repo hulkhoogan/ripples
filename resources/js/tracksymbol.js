@@ -57,13 +57,13 @@ L.TrackSymbol = L.Path.extend({
     }
     options = options || {};
     this._id = options.trackId || 0;
-    this._leaflet_id = this._id; 
+    this._leaflet_id = this._id;
     this._latlng = L.latLng(latlng);
     this._size = options.size || 24;
     this._heading = options.heading;
     this._course = options.course;
     this._speed = options.speed;
-    this._leaderTime = options.leaderTime || 1200.0;
+    this._leaderTime = options.leaderTime || 60.0;
     this._minSilouetteZoom = options.minSilouetteZoom || 14;
     this.setGPSRefPos(options.gpsRefPos);
     this._triSymbol = options.defaultSymbol || [0.75,0, -0.25,0.3, -0.25,-0.3];
@@ -72,7 +72,7 @@ L.TrackSymbol = L.Path.extend({
   },
 
   /**
-   * This function is empty but necessary 
+   * This function is empty but necessary
    * because it is called during the rendering process of Leaflet v1.0.
    * @method _project
    */
@@ -89,7 +89,7 @@ L.TrackSymbol = L.Path.extend({
   },
 
   /**
-   * Sets the contents of the d-attribute in a path-element of an svg-file.  
+   * Sets the contents of the d-attribute in a path-element of an svg-file.
    * @method _setPath
    */
   _setPath: function(){
@@ -99,7 +99,7 @@ L.TrackSymbol = L.Path.extend({
   /**
    * Set the default symbol.
    * @method setDefaultSymbol
-   * @param symbol {Array} The corner points of the symbol. 
+   * @param symbol {Array} The corner points of the symbol.
    */
   setDefaultSymbol: function (symbol) {
     this._triSymbol = symbol;
@@ -109,7 +109,7 @@ L.TrackSymbol = L.Path.extend({
   /**
    * Set the symbol for tracks with no heading.
    * @method setNoHeadingSymbol
-   * @param symbol {Array} The corner points of the symbol. 
+   * @param symbol {Array} The corner points of the symbol.
    */
   setNoHeadingSymbol: function (symbol) {
     this._diaSymbol = symbol;
@@ -119,17 +119,17 @@ L.TrackSymbol = L.Path.extend({
   /**
    * Set the symbol for tracks with shown silouette.
    * @method setSilouetteSymbol
-   * @param symbol {Array} The corner points of the symbol. 
+   * @param symbol {Array} The corner points of the symbol.
    */
   setSilouetteSymbol: function (symbol) {
     this._silSymbol = symbol;
     return this.redraw();
   },
-  
+
   /**
    * Set latitude/longitude on the symbol.
    * @method setLatLng
-   * @param latlng {LatLng} Position of the symbol on the map. 
+   * @param latlng {LatLng} Position of the symbol on the map.
    */
   setLatLng: function (latlng) {
     var oldLatLng = this._latlng;
@@ -137,18 +137,18 @@ L.TrackSymbol = L.Path.extend({
     this.fire('move', {oldLatLng: oldLatLng, latlng: this._latlng});
     return this.redraw();
   },
-  
+
   /**
    * Set the speed shown in the symbol [m/s].
    * The leader-length is calculated via leaderTime.
    * @method setSpeed
-   * @param speed {Number} The speed in [m/s]. 
+   * @param speed {Number} The speed in [m/s].
    */
   setSpeed: function( speed ) {
     this._speed = speed;
     return this.redraw();
   },
-  
+
   /**
    * Sets the course over ground [rad].
    * The speed-leader points in this direction.
@@ -159,7 +159,7 @@ L.TrackSymbol = L.Path.extend({
     this._course = course;
     return this.redraw();
   },
-  
+
   /**
    * Sets the heading of the symbol [rad].
    * The heading rotates the symbol.
@@ -170,7 +170,7 @@ L.TrackSymbol = L.Path.extend({
     this._heading = heading;
     return this.redraw();
   },
-  
+
   /**
    * Sets the leaderTime of the symbol [seconds].
    * @method setLeaderTime
@@ -189,14 +189,14 @@ L.TrackSymbol = L.Path.extend({
    * @param gpsRefPos {Array} The GPS offset from center.
    */
   setGPSRefPos: function(gpsRefPos) {
-    if(gpsRefPos === undefined || 
-       gpsRefPos.length < 4) {
+    if(gpsRefPos === undefined ||
+      gpsRefPos.length < 4) {
       this._gpsRefPos = undefined;
     }
-    else if(gpsRefPos[0] === 0 && 
-            gpsRefPos[1] === 0 && 
-            gpsRefPos[2] === 0 && 
-            gpsRefPos[3] === 0) {
+    else if(gpsRefPos[0] === 0 &&
+      gpsRefPos[1] === 0 &&
+      gpsRefPos[2] === 0 &&
+      gpsRefPos[3] === 0) {
       this._gpsRefPos = undefined;
     }
     else {
@@ -213,7 +213,7 @@ L.TrackSymbol = L.Path.extend({
   getTrackId: function() {
     return this._Id;
   },
-    
+
   _getLatSize: function () {
     return this._getLatSizeOf(this._size);
   },
@@ -221,7 +221,7 @@ L.TrackSymbol = L.Path.extend({
   _getLngSize: function () {
     return this._getLngSizeOf(this._size);
   },
-  
+
   _getLatSizeOf: function (value) {
     return (value / 40075017) * 360;
   },
@@ -236,12 +236,12 @@ L.TrackSymbol = L.Path.extend({
    * @return {LatLngBounds} The bounding box.
    */
   getBounds: function () {
-     var lngSize = this._getLngSize() / 2.0;
-     var latSize = this._getLatSize() / 2.0;
-     var latlng = this._latlng;
-     return new L.LatLngBounds(
-            [latlng.lat - latSize, latlng.lng - lngSize],
-            [latlng.lat + latSize, latlng.lng + lngSize]);
+    var lngSize = this._getLngSize() / 2.0;
+    var latSize = this._getLatSize() / 2.0;
+    var latlng = this._latlng;
+    return new L.LatLngBounds(
+      [latlng.lat - latSize, latlng.lng - lngSize],
+      [latlng.lat + latSize, latlng.lng + lngSize]);
   },
 
   /**
@@ -353,7 +353,7 @@ L.TrackSymbol = L.Path.extend({
 
   _resizeAndMovePoint: function(point, size, offset) {
     return [
-      point[0] * size[0] + offset[0], 
+      point[0] * size[0] + offset[0],
       point[1] * size[1] + offset[1]
     ];
   },
@@ -367,7 +367,7 @@ L.TrackSymbol = L.Path.extend({
 
   _getOffsetFromGPSRefPos: function() {
     return [
-      -this._gpsRefPos[1], 
+      -this._gpsRefPos[1],
       -this._gpsRefPos[3]
     ];
   },
@@ -379,7 +379,7 @@ L.TrackSymbol = L.Path.extend({
     var offset = this._getOffsetFromGPSRefPos();
     for(var i=0;i<this._silSymbol.length;i+=2) {
       var pt = [
-        this._silSymbol[i+0], 
+        this._silSymbol[i+0],
         this._silSymbol[i+1]
       ];
       pt = this._resizeAndMovePoint(pt, size, offset);
@@ -428,9 +428,8 @@ L.TrackSymbol = L.Path.extend({
  * Factory function to create the symbol.
  * @method trackSymbol
  * @param latlng {LatLng} The position on the map.
- * @param options {Object} Additional options. 
+ * @param options {Object} Additional options.
  */
 L.trackSymbol = function (latlng, options) {
-    return new L.TrackSymbol(latlng, options);
+  return new L.TrackSymbol(latlng, options);
 };
-
