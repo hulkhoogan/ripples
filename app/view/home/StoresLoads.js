@@ -1,5 +1,14 @@
 Ext.define('Ripples.view.home.StoresLoads', {
 
+  requires: [
+    'Ext.chart.CartesianChart',
+    'Ext.chart.axis.Numeric',
+    'Ext.chart.series.Line',
+    'Ext.data.JsonStore',
+    'Ext.layout.container.Fit',
+    'Ext.panel.Panel'
+  ],
+
   activeLoad: function (store, recs) {
     var me = this,
       model = this.getViewModel(),
@@ -75,7 +84,7 @@ Ext.define('Ripples.view.home.StoresLoads', {
   positionsLoad: function (store, records) {
     var me = this,
       model = this.getViewModel(),
-      activeMaps = model.get('activeMaps'),
+      activeMaps = model.get('maps'),
       systems = this.getStore('systems');
 
     if (systems.isLoaded()) {
@@ -101,81 +110,98 @@ Ext.define('Ripples.view.home.StoresLoads', {
   },
 
   profilesLoad: function (store, records) {
+    var me = this,
+      model = this.getViewModel(),
+      activeMaps = model.get('maps');
+
+    records.forEach(function (element, index, array) {
+      var data = element.getData(),
+        lat = data.latitude,
+        long = data.longitude;
+
+      Ext.iterate(activeMaps, function (key, value) {
+        var map = value.down('leafletmap').getMap(),
+          cmp = value.down('leafletmap'),
+          d = new Date(Number(element.getData().timestamp)),
+          date = ('0' + d.getHours()).slice(-2) + 'h:' + ('0' + d.getMinutes()).slice(-2) + 'm',
+          marker = new L.marker(L.latLng(lat, long));
+        marker.addTo(map);
+        marker.on('mouseover', function (e) {
+          if (marker.plot) marker.plot.destroy();
+          marker.plot = Ext.create('Ext.panel.Panel', {
+            title: name + ' | ' + date,
+            width: 300,
+            height: 300,
+            cls: 'plot',
+            renderTo: cmp.el.dom,
+            layout: 'fit',
+            items: [{
+              xtype: 'chart',
+              style: {
+                'background': '#fff'
+              },
+              animate: true,
+              shadow: false,
+              store: Ext.create('Ext.data.JsonStore', {
+                fields: ['depth', 'value'],
+                data: element.getData().samples
+              }),
+              axes: [{
+                type: 'numeric',
+                position: 'left',
+                title: 'Temperature',
+                grid: true,
+                label: {
+                  renderer: function (v) {return v + 'm'; }
+                }
+              }, {
+                type: 'numeric',
+                position: 'bottom',
+                title: 'Depth',
+                label: {
+                  renderer: function (v) { return v + 'º'; }
+                }
+              }],
+              series: [{
+                type: 'line',
+                xField: 'depth',
+                yField: ['value'],
+                title: ['Depth', 'Temp'],
+                style: {
+                  'stroke-width': 4
+                },
+                markerConfig: {
+                  radius: 4
+                },
+                highlight: {
+                  fill: '#000',
+                  radius: 5,
+                  'stroke-width': 2,
+                  stroke: '#fff'
+                },
+                tips: {
+                  trackMouse: true,
+                  style: 'background: #FFF',
+                  height: 20,
+                  showDelay: 0,
+                  dismissDelay: 0,
+                  hideDelay: 0
+                }
+              }]
+            }]
+          });
+        });
+        marker.on('mouseout', function (e) {
+          if (marker.plot) marker.plot.destroy();
+        });
+
+      });
+    });
     // var profile = profiles.getById(name),
     //   marker = markers[name];
     //
     // if (profile) {
-    //   var d = new Date(Number(profile.getData().timestamp)),
-    //     date = ('0' + d.getHours()).slice(-2) + 'h:' + ('0' + d.getMinutes()).slice(-2) + 'm';
-    //   marker.on('mouseover', function (e) {
-    //     if (marker.plot) marker.plot.destroy();
-    //     marker.plot = Ext.create('Ext.panel.Panel', {
-    //       title: name + ' | ' + date,
-    //       width: 300,
-    //       height: 300,
-    //       cls: 'plot',
-    //       renderTo: cmp.el.dom,
-    //       layout: 'fit',
-    //       items: [{
-    //         xtype: 'chart',
-    //         style: {
-    //           'background': '#fff'
-    //         },
-    //         animate: true,
-    //         shadow: false,
-    //         store: Ext.create('Ext.data.JsonStore', {
-    //           fields: ['depth', 'value'],
-    //           data: profile.getData().samples
-    //         }),
-    //         axes: [{
-    //           type: 'numeric',
-    //           position: 'left',
-    //           title: 'Depth',
-    //           grid: true,
-    //           label: {
-    //             renderer: function (v) {return v + 'm'; }
-    //           }
-    //         }, {
-    //           type: 'numeric',
-    //           position: 'bottom',
-    //           title: 'Temperature',
-    //           label: {
-    //             renderer: function (v) { return v + 'º'; }
-    //           }
-    //         }],
-    //         series: [{
-    //           type: 'line',
-    //           xField: 'depth',
-    //           yField: ['value'],
-    //           title: ['Depth', 'Temp'],
-    //           style: {
-    //             'stroke-width': 4
-    //           },
-    //           markerConfig: {
-    //             radius: 4
-    //           },
-    //           highlight: {
-    //             fill: '#000',
-    //             radius: 5,
-    //             'stroke-width': 2,
-    //             stroke: '#fff'
-    //           },
-    //           tips: {
-    //             trackMouse: true,
-    //             style: 'background: #FFF',
-    //             height: 20,
-    //             showDelay: 0,
-    //             dismissDelay: 0,
-    //             hideDelay: 0
-    //           }
-    //         }]
-    //       }]
-    //     });
-    //   });
-    //   marker.on('mouseout', function (e) {
-    //     if (marker.plot) marker.plot.destroy();
-    //   });
-    // }
+    //
   }
 
 });
