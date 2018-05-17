@@ -228,6 +228,9 @@ Ext.define('Ripples.view.home.StoresLoads', {
           plan.waypoints.forEach(function (waypoint) {
             layer.addLatLng(new L.LatLng(waypoint.latitude, waypoint.longitude));
           });
+          markers[name].on('click', function () {
+            console.log('teste');
+          });
         }
         cmp.setPlans(plans);
       });
