@@ -13,6 +13,7 @@ Ext.define('Ripples.view.home.StoresLoads', {
   activeLoad: function (store, recs) {
     var me = this,
       model = this.getViewModel(),
+      storePlans = this.getStore('plans'),
       maps = model.get('maps');
 
     recs.forEach(function (element, index, array) {
@@ -64,6 +65,9 @@ Ext.define('Ripples.view.home.StoresLoads', {
         cmp.setUpdates(updates);
       });
     });
+    if(!storePlans.isLoaded()){
+      storePlans.load();
+    }
 
   },
 
@@ -223,6 +227,7 @@ Ext.define('Ripples.view.home.StoresLoads', {
             };
             plans[plan.id]['layer'].addLatLng(new L.LatLng(lastState.latitude, lastState.longitude));
             plans[plan.id]['layer'].addTo(map);
+            plans[plan.id]['layer'].bringToFront();
           }
           var layer = plans[plan.id]['layer'];
           plan.waypoints.forEach(function (waypoint) {
