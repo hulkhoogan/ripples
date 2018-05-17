@@ -65,7 +65,7 @@ Ext.define('Ripples.view.home.StoresLoads', {
         cmp.setUpdates(updates);
       });
     });
-    if(!storePlans.isLoaded()){
+    if (!storePlans.isLoaded()) {
       storePlans.load();
     }
 
@@ -229,12 +229,21 @@ Ext.define('Ripples.view.home.StoresLoads', {
             plans[plan.id]['layer'].addTo(map);
             plans[plan.id]['layer'].bringToFront();
           }
-          var layer = plans[plan.id]['layer'];
+          var layer = plans[plan.id]['layer'],
+            marker = markers[name];
           plan.waypoints.forEach(function (waypoint) {
             layer.addLatLng(new L.LatLng(waypoint.latitude, waypoint.longitude));
           });
-          markers[name].on('click', function () {
-            console.log('teste');
+          marker.on('click', function () {
+            if (marker.slider) marker.slider.destroy();
+            marker.slider = Ext.create('Ext.panel.Panel', {
+              width: 300,
+              height: 60,
+              cls: 'slider',
+              renderTo: cmp.el.dom,
+              layout: 'fit',
+              items: [{}]
+            });
           });
         }
         cmp.setPlans(plans);
