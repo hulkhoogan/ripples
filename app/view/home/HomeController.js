@@ -142,7 +142,7 @@ Ext.define('Ripples.view.home.HomeController', {
         var map = value.down('leafletmap').getMap(),
           lat = ev.latlng.lat,
           lng = ev.latlng.lng,
-          marker = new L.marker([lat, lng], {icon: me.crosshairIcon, clickable: false}),
+          marker = new L.marker([lat, lng], {icon: me.crosshairIcon, clickable: false, zIndexOffset: 399}),
           cmpMap = value.down('mapleaflet');
         if (cmpMap.getCrosshair()) {
           map.removeLayer(cmpMap.getCrosshair());
