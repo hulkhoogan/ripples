@@ -28,7 +28,8 @@ Ext.define('Ripples.view.home.components.MapContainer', {
       handler: 'gibsMaps'
     }, {
       xtype: 'button',
-      iconCls: 'x-fa fa-refresh'
+      iconCls: 'x-fa fa-refresh',
+      handler: 'invalidateSize'
     }],
     defaults: {
       width: 50,

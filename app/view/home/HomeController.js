@@ -155,6 +155,12 @@ Ext.define('Ripples.view.home.HomeController', {
 
   },
 
+  invalidateSize: function (button) {
+    var cmp = button.up('mapcontainer'),
+      map = cmp.down('mapleaflet');
+    map.getMap().invalidateSize();
+  },
+
   gibsMaps: function (button) {
     var gibsStore = this.getStore('gibs'),
       cmp = button.up('mapcontainer'),
