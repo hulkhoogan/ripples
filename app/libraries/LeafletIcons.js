@@ -64,6 +64,10 @@ Ext.define('Ripples.libraries.LeafletIcons', {
     itemId: 'wptGray',
     url: 'icons/wpt_gray.png',
     type: 'wpt'
+  }, {
+    itemId: 'info',
+    url: 'images/info.png',
+    type: 'sys'
   }],
 
   getIconByName: function (name) {

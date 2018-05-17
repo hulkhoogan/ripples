@@ -39,6 +39,11 @@ Ext.define('Ripples.view.home.HomeModel', {
       listeners: {
         load: 'profilesLoad'
       }
+    },
+
+    plans: {
+      model: 'Soi',
+      autoLoad: true
     }
   },
 

@@ -6,7 +6,8 @@ Ext.define('Ripples.view.home.StoresLoads', {
     'Ext.chart.series.Line',
     'Ext.data.JsonStore',
     'Ext.layout.container.Fit',
-    'Ext.panel.Panel'
+    'Ext.panel.Panel',
+    'Ext.util.Format'
   ],
 
   activeLoad: function (store, recs) {
@@ -124,7 +125,9 @@ Ext.define('Ripples.view.home.StoresLoads', {
           cmp = value.down('leafletmap'),
           d = new Date(Number(element.getData().timestamp)),
           date = ('0' + d.getHours()).slice(-2) + 'h:' + ('0' + d.getMinutes()).slice(-2) + 'm',
-          marker = new L.marker(L.latLng(lat, long));
+          marker = new L.marker(L.latLng(lat, long), {
+            icon: me.getIconById('info')
+          });
         marker.addTo(map);
         marker.on('mouseover', function (e) {
           if (marker.plot) marker.plot.destroy();
@@ -151,16 +154,12 @@ Ext.define('Ripples.view.home.StoresLoads', {
                 position: 'left',
                 title: 'Temperature',
                 grid: true,
-                label: {
-                  renderer: function (v) {return v + 'm'; }
-                }
+                // renderer: function (axis, v) { return Ext.util.Format.number(v, '000.000') + 'º'; }
               }, {
                 type: 'numeric',
                 position: 'bottom',
                 title: 'Depth',
-                label: {
-                  renderer: function (v) { return v + 'º'; }
-                }
+                // renderer: function (axis, v) { return Ext.util.Format.number(v, '000') + 'm'; }
               }],
               series: [{
                 type: 'line',
@@ -197,11 +196,6 @@ Ext.define('Ripples.view.home.StoresLoads', {
 
       });
     });
-    // var profile = profiles.getById(name),
-    //   marker = markers[name];
-    //
-    // if (profile) {
-    //
   }
 
 });
