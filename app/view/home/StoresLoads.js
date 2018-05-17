@@ -153,12 +153,12 @@ Ext.define('Ripples.view.home.StoresLoads', {
                 type: 'numeric',
                 position: 'left',
                 title: 'Temperature',
-                grid: true,
+                grid: true
                 // renderer: function (axis, v) { return Ext.util.Format.number(v, '000.000') + 'º'; }
               }, {
                 type: 'numeric',
                 position: 'bottom',
-                title: 'Depth',
+                title: 'Depth'
                 // renderer: function (axis, v) { return Ext.util.Format.number(v, '000') + 'm'; }
               }],
               series: [{
@@ -194,6 +194,42 @@ Ext.define('Ripples.view.home.StoresLoads', {
           if (marker.plot) marker.plot.destroy();
         });
 
+      });
+    });
+  },
+
+  plansLoad: function (store, recs) {
+    var me = this,
+      model = this.getViewModel(),
+      maps = model.get('maps');
+
+    recs.forEach(function (element, index, array) {
+      var data = element.getData(),
+        plan = data.plan,
+        name = data.name,
+        lastState = data.lastState;
+
+      Ext.iterate(maps, function (key, value) {
+        var map = value.down('leafletmap').getMap(),
+          cmp = value.down('leafletmap'),
+          markers = cmp.getMarkers(),
+          plans = cmp.getPlans();
+
+        if (markers[name] !== undefined) {
+          if (!plans[plan.id]) {
+            plans[plan.id] = {
+              waypoints: plan.waypoints,
+              layer: L.polyline({})
+            };
+            plans[plan.id]['layer'].addLatLng(new L.LatLng(lastState.latitude, lastState.longitude));
+            plans[plan.id]['layer'].addTo(map);
+          }
+          var layer = plans[plan.id]['layer'];
+          plan.waypoints.forEach(function (waypoint) {
+            layer.addLatLng(new L.LatLng(waypoint.latitude, waypoint.longitude));
+          });
+        }
+        cmp.setPlans(plans);
       });
     });
   }

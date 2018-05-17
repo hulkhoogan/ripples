@@ -34,6 +34,7 @@ Ext.define('Ripples.view.home.HomeController', {
       store = this.getStore('active'),
       storePositions = this.getStore('positions'),
       storeProfiles = this.getStore('profiles'),
+      storePlans = this.getStore('plans'),
       ripplesRef = new Firebase('https://neptus.firebaseio.com/'),
       me = this;
 
@@ -65,6 +66,7 @@ Ext.define('Ripples.view.home.HomeController', {
     store.load();
     storePositions.load();
     storeProfiles.load();
+    storePlans.load();
 
     Ext.global.setInterval(function () {
       store.load();
