@@ -7,6 +7,7 @@ Ext.define('Ripples.view.home.StoresLoads', {
     'Ext.data.JsonStore',
     'Ext.layout.container.Fit',
     'Ext.panel.Panel',
+    'Ext.slider.Single',
     'Ext.util.Format'
   ],
 
@@ -242,7 +243,9 @@ Ext.define('Ripples.view.home.StoresLoads', {
               cls: 'slider',
               renderTo: cmp.el.dom,
               layout: 'fit',
-              items: [{}]
+              items: [{
+                xtype: 'slider'
+              }]
             });
           });
         }
