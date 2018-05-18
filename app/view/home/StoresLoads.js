@@ -234,10 +234,22 @@ Ext.define('Ripples.view.home.StoresLoads', {
             plans[plan.id]['layer'].bringToFront();
           }
           var layer = plans[plan.id]['layer'],
-            marker = markers[name];
+            marker = markers[name],
+            old_positions = positions.queryBy(function (record) {
+              let getName = systems.getById(record.get('imc_id'));
+              if (getName) {
+                let recordName = getName.getData().name;
+                return recordName === name;
+              }
+              else {
+                return false;
+              }
+            });
           plan.waypoints.forEach(function (waypoint) {
             layer.addLatLng(new L.LatLng(waypoint.latitude, waypoint.longitude));
           });
+
+          console.log(old_positions);
           marker.on('click', function () {
             if (marker.slider) marker.slider.destroy();
             marker.slider = Ext.create('Ext.panel.Panel', {
@@ -252,16 +264,7 @@ Ext.define('Ripples.view.home.StoresLoads', {
               }]
             });
           });
-          positions.queryBy(function (record) {
-            let getName = systems.getById(record.imc_id);
-            if (getName) {
-              let recordName = getName.getData().name;
-              return recordName === name;
-            }
-            else {
-              return false;
-            }
-          });
+
         }
         cmp.setPlans(plans);
       });
