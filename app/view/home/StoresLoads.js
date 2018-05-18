@@ -101,6 +101,7 @@ Ext.define('Ripples.view.home.StoresLoads', {
           updated = new Date(data.timestamp),
           imc_id = data.imc_id,
           name = systems.getById(imc_id).getData().name;
+        element.name = name;
         Ext.iterate(activeMaps, function (key, value) {
           var map = value.down('leafletmap').getMap(),
             cmp = value.down('leafletmap');
@@ -206,6 +207,8 @@ Ext.define('Ripples.view.home.StoresLoads', {
   plansLoad: function (store, recs) {
     var me = this,
       model = this.getViewModel(),
+      positions = this.getStore('positions'),
+      systems = this.getStore('systems'),
       maps = model.get('maps');
 
     recs.forEach(function (element, index, array) {
@@ -243,10 +246,21 @@ Ext.define('Ripples.view.home.StoresLoads', {
               cls: 'slider',
               renderTo: cmp.el.dom,
               layout: 'fit',
+              padding: 5,
               items: [{
                 xtype: 'slider'
               }]
             });
+          });
+          positions.queryBy(function (record) {
+            let getName = systems.getById(record.imc_id);
+            if (getName) {
+              let recordName = getName.getData().name;
+              return recordName === name;
+            }
+            else {
+              return false;
+            }
           });
         }
         cmp.setPlans(plans);

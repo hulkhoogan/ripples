@@ -168,8 +168,8 @@ Ext.define('Ripples.view.home.FireBase', {
         ships[name].setHeading(heading);
         ships[name].setSpeed(speed);
       }
-      else {
-        ships[name] = L.trackSymbol(pos, {
+      else if (heading > 0) {
+        ships[name] = L.trackSymbol(new L.LatLng(lat, lon), {
           icon: me.getIconById('shipIcon'),
           fill: true,
           fillColor: fillColor,
@@ -183,14 +183,14 @@ Ext.define('Ripples.view.home.FireBase', {
           speed: speed
         });
         ships[name].addTo(map);
+        ships[name].bindPopup('<b>' + name + '</b><hr/>'
+          + type + '<br/>'
+          + lat.toFixed(6) + ', ' + lon.toFixed(6) + '<br/>'
+          + speed.toFixed(1) + ' m/s<br/>'
+          + '<a href="https://www.marinetraffic.com/en/ais/details/ships/mmsi:' + mmsi + '" target="_blank">more info</a><hr/>'
+          + new Date().toLocaleString());
       }
 
-      ships[name].bindPopup('<b>' + name + '</b><hr/>'
-        + type + '<br/>'
-        + lat.toFixed(6) + ', ' + lon.toFixed(6) + '<br/>'
-        + speed.toFixed(1) + ' m/s<br/>'
-        + '<a href="https://www.marinetraffic.com/en/ais/details/ships/mmsi:' + mmsi + '" target="_blank">more info</a><hr/>'
-        + new Date().toLocaleString());
       cmp.setShips(ships);
     });
   }
