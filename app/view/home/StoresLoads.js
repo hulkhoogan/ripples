@@ -245,11 +245,18 @@ Ext.define('Ripples.view.home.StoresLoads', {
                 return false;
               }
             });
+          var futurePos = 0,
+            totalPos = 0,
+            currentTimeStamp = lastState.time;
           plan.waypoints.forEach(function (waypoint) {
             layer.addLatLng(new L.LatLng(waypoint.latitude, waypoint.longitude));
+            var calc = currentTimeStamp - waypoint.eta,
+              mins = new Date(calc).getMinutes();
+            currentTimeStamp = waypoint.eta;
+            futurePos += mins;
           });
-
-          console.log(old_positions);
+          totalPos = futurePos + old_positions.items.length;
+          console.log(totalPos);
           marker.on('click', function () {
             if (marker.slider) marker.slider.destroy();
             marker.slider = Ext.create('Ext.panel.Panel', {
