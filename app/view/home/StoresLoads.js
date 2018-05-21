@@ -211,7 +211,7 @@ Ext.define('Ripples.view.home.StoresLoads', {
       systems = this.getStore('systems'),
       maps = model.get('maps');
 
-    if (systems.isLoaded()) {
+    if (systems.isLoaded() && positions.isLoaded()) {
       recs.forEach(function (element, index, array) {
         var data = element.getData(),
           plan = data.plan,
@@ -247,7 +247,7 @@ Ext.define('Ripples.view.home.StoresLoads', {
                 }
               });
 
-            var firstDate = new Date(old_positions.items[old_positions.length - 1].data.timestamp).getTime()-1000000,
+            var firstDate = new Date(old_positions.items[old_positions.length - 1].data.timestamp).getTime() - 3600000,
               lastDate = plan.waypoints[plan.waypoints.length - 1].eta;
 
             plan.waypoints.forEach(function (waypoint) {

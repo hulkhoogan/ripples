@@ -1,0 +1,40 @@
+[
+  {
+    "name": "lauv-xplore-1",
+    "plan": {
+      "id": "soi_23022",
+      "waypoints": [
+        {
+          "latitude": 41.17164,
+          "longitude": -8.716638,
+          "duration": 60,
+          "eta": 1526925729
+        },
+        {
+          "latitude": 41.176678,
+          "longitude": -8.725392,
+          "duration": 300,
+          "eta": 1526926713
+        },
+        {
+          "latitude": 41.190918,
+          "longitude": -8.744447,
+          "duration": 60,
+          "eta": 1526929262
+        },
+        {
+          "latitude": 41.190952,
+          "longitude": -8.760497,
+          "duration": 60,
+          "eta": 1526930668
+        }
+      ]
+    },
+    "lastState": {
+      "latitude": 41.179569244384766,
+      "longitude": -8.730454444885254,
+      "time": 1526927437,
+      "heading": 0.0024454278036333426
+    }
+  }
+]
