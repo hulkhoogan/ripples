@@ -275,6 +275,18 @@ Ext.define('Ripples.view.home.StoresLoads', {
                       value = this.getValues()[0];
                       if (value < this.middlepoint) {
                         console.log('old positions');
+                        var selected = null,
+                          bestDiff = Number.MAX_SAFE_INTEGER;
+                        old_positions.items.forEach(function (record) {
+                          var date = (new Date(record.get('timestamp')).getTime() - 3600000),
+                            diff = Math.abs(date - value);
+                          if (diff < bestDiff) {
+                            selected = record;
+                            bestDiff = diff;
+                          }
+                        });
+                        var data = selected.getData();
+                        console.log(selected.getData(), marker.setLatLng(new L.LatLng(data.lat, data.lon)));
                       }
                       else if (value > this.middlepoint) {
                         console.log('future positions');

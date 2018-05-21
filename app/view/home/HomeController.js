@@ -66,9 +66,9 @@ Ext.define('Ripples.view.home.HomeController', {
     storePositions.load();
     storeProfiles.load();
 
-    Ext.global.setInterval(function () {
-      store.load();
-    }, 60000);
+    // Ext.global.setInterval(function () {
+    //   store.load();
+    // }, 60000);
   },
 
   syncMaps: function (cmp) {
