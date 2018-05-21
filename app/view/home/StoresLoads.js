@@ -254,9 +254,6 @@ Ext.define('Ripples.view.home.StoresLoads', {
               layer.addLatLng(new L.LatLng(waypoint.latitude, waypoint.longitude));
             });
 
-            console.log(new Date(firstDate), new Date(lastDate * 1000), new Date(lastState.time * 1000));
-            console.log((firstDate), (lastDate * 1000), (lastState.time * 1000));
-
             marker.on('click', function () {
               if (marker.slider) marker.slider.destroy();
               marker.slider = Ext.create('Ext.panel.Panel', {
@@ -268,12 +265,23 @@ Ext.define('Ripples.view.home.StoresLoads', {
                 padding: 5,
                 items: [{
                   xtype: 'slider',
+                  middlepoint: lastState.time * 1000,
                   minValue: firstDate,
                   value: lastState.time * 1000,
                   maxValue: lastDate * 1000,
+                  increment: 1000, // 1s interval
                   listeners: {
                     change: function () {
-                      console.log(this.getValues());
+                      value = this.getValues()[0];
+                      if (value < this.middlepoint) {
+                        console.log('old positions');
+                      }
+                      else if (value > this.middlepoint) {
+                        console.log('future positions');
+                      }
+                      else {
+                        console.log('last state');
+                      }
                     }
                   }
                 }]
