@@ -211,77 +211,85 @@ Ext.define('Ripples.view.home.StoresLoads', {
       systems = this.getStore('systems'),
       maps = model.get('maps');
 
-    recs.forEach(function (element, index, array) {
-      var data = element.getData(),
-        plan = data.plan,
-        name = data.name,
-        lastState = data.lastState;
+    if (systems.isLoaded()) {
+      recs.forEach(function (element, index, array) {
+        var data = element.getData(),
+          plan = data.plan,
+          name = data.name,
+          lastState = data.lastState;
 
-      Ext.iterate(maps, function (key, value) {
-        var map = value.down('leafletmap').getMap(),
-          cmp = value.down('leafletmap'),
-          markers = cmp.getMarkers(),
-          plans = cmp.getPlans();
+        Ext.iterate(maps, function (key, value) {
+          var map = value.down('leafletmap').getMap(),
+            cmp = value.down('leafletmap'),
+            markers = cmp.getMarkers(),
+            plans = cmp.getPlans();
 
-        if (markers[name] !== undefined) {
-          if (!plans[plan.id]) {
-            plans[plan.id] = {
-              waypoints: plan.waypoints,
-              layer: L.polyline({})
-            };
-            plans[plan.id]['layer'].addLatLng(new L.LatLng(lastState.latitude, lastState.longitude));
-            plans[plan.id]['layer'].addTo(map);
-            plans[plan.id]['layer'].bringToFront();
-          }
-          var layer = plans[plan.id]['layer'],
-            marker = markers[name],
-            old_positions = positions.queryBy(function (record) {
-              let getName = systems.getById(record.get('imc_id'));
-              if (getName) {
-                let recordName = getName.getData().name;
-                return recordName === name;
-              }
-              else {
-                return false;
-              }
-            });
-
-          var firstDate = old_positions.items[0].data.timestamp,
-            lastDate = plan.waypoints[plan.waypoints.length - 1].eta;
-
-          plan.waypoints.forEach(function (waypoint) {
-            layer.addLatLng(new L.LatLng(waypoint.latitude, waypoint.longitude));
-          });
-
-          console.log(new Date(firstDate), new Date(lastDate * 1000), new Date(lastState.time * 1000));
-
-          marker.on('click', function () {
-            if (marker.slider) marker.slider.destroy();
-            marker.slider = Ext.create('Ext.panel.Panel', {
-              width: 300,
-              height: 60,
-              cls: 'slider',
-              renderTo: cmp.el.dom,
-              layout: 'fit',
-              padding: 5,
-              items: [{
-                xtype: 'slider',
-                minValue: firstDate,
-                value: lastState.time * 1000,
-                maxValue: lastDate * 1000,
-                listeners: {
-                  change: function () {
-                    console.log(this.getValues());
-                  }
+          if (markers[name] !== undefined) {
+            if (!plans[plan.id]) {
+              plans[plan.id] = {
+                waypoints: plan.waypoints,
+                layer: L.polyline({})
+              };
+              plans[plan.id]['layer'].addLatLng(new L.LatLng(lastState.latitude, lastState.longitude));
+              plans[plan.id]['layer'].addTo(map);
+              plans[plan.id]['layer'].bringToFront();
+            }
+            var layer = plans[plan.id]['layer'],
+              marker = markers[name],
+              old_positions = positions.queryBy(function (record) {
+                let getName = systems.getById(record.get('imc_id'));
+                if (getName) {
+                  let recordName = getName.getData().name;
+                  return recordName === name;
                 }
-              }]
-            });
-          });
+                else {
+                  return false;
+                }
+              });
 
-        }
-        cmp.setPlans(plans);
+            var firstDate = new Date(old_positions.items[old_positions.length - 1].data.timestamp).getTime()-1000000,
+              lastDate = plan.waypoints[plan.waypoints.length - 1].eta;
+
+            plan.waypoints.forEach(function (waypoint) {
+              layer.addLatLng(new L.LatLng(waypoint.latitude, waypoint.longitude));
+            });
+
+            console.log(new Date(firstDate), new Date(lastDate * 1000), new Date(lastState.time * 1000));
+            console.log((firstDate), (lastDate * 1000), (lastState.time * 1000));
+
+            marker.on('click', function () {
+              if (marker.slider) marker.slider.destroy();
+              marker.slider = Ext.create('Ext.panel.Panel', {
+                width: 300,
+                height: 60,
+                cls: 'slider',
+                renderTo: cmp.el.dom,
+                layout: 'fit',
+                padding: 5,
+                items: [{
+                  xtype: 'slider',
+                  minValue: firstDate,
+                  value: lastState.time * 1000,
+                  maxValue: lastDate * 1000,
+                  listeners: {
+                    change: function () {
+                      console.log(this.getValues());
+                    }
+                  }
+                }]
+              });
+            });
+
+          }
+          cmp.setPlans(plans);
+        });
       });
-    });
+    }
+    else {
+      Ext.global.setTimeout(function () {
+        me.plansLoad(store, recs);
+      }, 400);
+    }
   }
 
 });
