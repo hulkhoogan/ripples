@@ -245,18 +245,16 @@ Ext.define('Ripples.view.home.StoresLoads', {
                 return false;
               }
             });
-          var futurePos = 0,
-            totalPos = 0,
-            currentTimeStamp = lastState.time;
+
+          var firstDate = old_positions.items[0].data.timestamp,
+            lastDate = plan.waypoints[plan.waypoints.length - 1].eta;
+
           plan.waypoints.forEach(function (waypoint) {
             layer.addLatLng(new L.LatLng(waypoint.latitude, waypoint.longitude));
-            var calc = currentTimeStamp - waypoint.eta,
-              mins = new Date(calc).getMinutes();
-            currentTimeStamp = waypoint.eta;
-            futurePos += mins;
           });
-          totalPos = futurePos + old_positions.items.length;
-          console.log(totalPos);
+
+          console.log(new Date(firstDate), new Date(lastDate * 1000), new Date(lastState.time * 1000));
+
           marker.on('click', function () {
             if (marker.slider) marker.slider.destroy();
             marker.slider = Ext.create('Ext.panel.Panel', {
@@ -267,7 +265,15 @@ Ext.define('Ripples.view.home.StoresLoads', {
               layout: 'fit',
               padding: 5,
               items: [{
-                xtype: 'slider'
+                xtype: 'slider',
+                minValue: firstDate,
+                value: lastState.time * 1000,
+                maxValue: lastDate * 1000,
+                listeners: {
+                  change: function () {
+                    console.log(this.getValues());
+                  }
+                }
               }]
             });
           });

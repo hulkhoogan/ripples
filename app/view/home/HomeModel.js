@@ -21,6 +21,7 @@ Ext.define('Ripples.view.home.HomeModel', {
 
     positions: {
       model: 'Positions',
+      pageSize: 1000,
       autoLoad: false,
       listeners: {
         load: 'positionsLoad'
