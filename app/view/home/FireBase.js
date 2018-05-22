@@ -1,6 +1,9 @@
 Ext.define('Ripples.view.home.FireBase', {
 
   updateAsset: function (snapshot) {
+    if (!snapshot.val()) {
+      return;
+    }
     var me = Ripples.getApplication().getMainView().down('home').lookupController(),
       model = me.getViewModel(),
       activeMaps = model.get('maps');
@@ -92,6 +95,7 @@ Ext.define('Ripples.view.home.FireBase', {
 
       cmp.setMarkers(markers);
     });
+
   },
 
   updateShip: function (snapshot) {

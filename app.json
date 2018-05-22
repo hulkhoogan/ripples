@@ -297,7 +297,7 @@
       "enable": true
     },
     "compressor": {
-      "type": "yui"
+      "type": "none"
     }
   },
   /**

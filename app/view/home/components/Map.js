@@ -34,7 +34,7 @@ Ext.define('Ripples.view.home.components.Map', {
   autoCenter: false,
   enableOwnPositionMarker: false,
   mapOptions: {
-    zoom: 12,
+    zoom: 6,
     center: [41.184774, -8.704476],
     zoomSnap: 0.25,
     contextmenu: true,

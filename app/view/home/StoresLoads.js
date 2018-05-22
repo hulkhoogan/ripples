@@ -224,84 +224,93 @@ Ext.define('Ripples.view.home.StoresLoads', {
             markers = cmp.getMarkers(),
             plans = cmp.getPlans();
 
-          if (markers[name] !== undefined) {
-            if (!plans[plan.id]) {
-              plans[plan.id] = {
-                waypoints: plan.waypoints,
-                layer: L.polyline({})
-              };
-              plans[plan.id]['layer'].addLatLng(new L.LatLng(lastState.latitude, lastState.longitude));
-              plans[plan.id]['layer'].addTo(map);
-              plans[plan.id]['layer'].bringToFront();
-            }
-            var layer = plans[plan.id]['layer'],
-              marker = markers[name],
-              old_positions = positions.queryBy(function (record) {
-                let getName = systems.getById(record.get('imc_id'));
-                if (getName) {
-                  let recordName = getName.getData().name;
-                  return recordName === name;
+          if (plan.waypoints.length > 0) {
+            if (plan.waypoints[0].eta) {
+
+              if (markers[name] !== undefined) {
+                if (!plans[plan.id]) {
+                  plans[plan.id] = {
+                    waypoints: plan.waypoints,
+                    layer: L.polyline({})
+                  };
+                  plans[plan.id]['layer'].addLatLng(new L.LatLng(lastState.latitude, lastState.longitude));
+                  plans[plan.id]['layer'].addTo(map);
+                  plans[plan.id]['layer'].bringToFront();
                 }
-                else {
-                  return false;
-                }
-              });
-
-            var firstDate = new Date(old_positions.items[old_positions.length - 1].data.timestamp).getTime() - 3600000,
-              lastDate = plan.waypoints[plan.waypoints.length - 1].eta;
-
-            plan.waypoints.forEach(function (waypoint) {
-              layer.addLatLng(new L.LatLng(waypoint.latitude, waypoint.longitude));
-            });
-
-            marker.on('click', function () {
-              if (marker.slider) marker.slider.destroy();
-              marker.slider = Ext.create('Ext.panel.Panel', {
-                width: 300,
-                height: 60,
-                cls: 'slider',
-                renderTo: cmp.el.dom,
-                layout: 'fit',
-                padding: 5,
-                items: [{
-                  xtype: 'slider',
-                  middlepoint: lastState.time * 1000,
-                  minValue: firstDate,
-                  value: lastState.time * 1000,
-                  maxValue: lastDate * 1000,
-                  increment: 1000, // 1s interval
-                  listeners: {
-                    change: function () {
-                      value = this.getValues()[0];
-                      if (value < this.middlepoint) {
-                        console.log('old positions');
-                        var selected = null,
-                          bestDiff = Number.MAX_SAFE_INTEGER;
-                        old_positions.items.forEach(function (record) {
-                          var date = (new Date(record.get('timestamp')).getTime() - 3600000),
-                            diff = Math.abs(date - value);
-                          if (diff < bestDiff) {
-                            selected = record;
-                            bestDiff = diff;
-                          }
-                        });
-                        var data = selected.getData();
-                        console.log(selected.getData(), marker.setLatLng(new L.LatLng(data.lat, data.lon)));
-                      }
-                      else if (value > this.middlepoint) {
-                        console.log('future positions');
-                      }
-                      else {
-                        console.log('last state');
-                      }
+                var layer = plans[plan.id]['layer'],
+                  marker = markers[name],
+                  old_positions = positions.queryBy(function (record) {
+                    let getName = systems.getById(record.get('imc_id'));
+                    if (getName) {
+                      let recordName = getName.getData().name;
+                      return recordName === name;
                     }
-                  }
-                }]
-              });
-            });
+                    else {
+                      return false;
+                    }
+                  });
 
+                var firstDate = new Date(old_positions.items[old_positions.length - 1].data.timestamp).getTime() - 3600000,
+                  lastDate = plan.waypoints[plan.waypoints.length - 1].eta;
+                console.log(new Date(firstDate), new Date(lastDate * 1000), new Date(lastState.time * 1000));
+
+                plan.waypoints.forEach(function (waypoint) {
+                  layer.addLatLng(new L.LatLng(waypoint.latitude, waypoint.longitude));
+                  var marker = new L.Marker(new L.LatLng(waypoint.latitude, waypoint.longitude));
+                  // marker.addTo(map);
+                });
+
+                marker.on('click', function () {
+                  if (marker.slider) marker.slider.destroy();
+                  marker.slider = Ext.create('Ext.panel.Panel', {
+                    width: 300,
+                    height: 60,
+                    cls: 'slider',
+                    renderTo: cmp.el.dom,
+                    layout: 'fit',
+                    padding: 5,
+                    items: [{
+                      xtype: 'slider',
+                      middlepoint: lastState.time * 1000,
+                      minValue: firstDate,
+                      value: lastState.time * 1000,
+                      maxValue: lastDate * 1000,
+                      increment: 1000, // 1s interval
+                      listeners: {
+                        change: function () {
+                          value = this.getValues()[0];
+                          if (value < this.middlepoint - 1000) {
+                            console.log('old positions');
+                            var selected = null,
+                              bestDiff = Number.MAX_SAFE_INTEGER;
+                            old_positions.items.forEach(function (record) {
+                              var date = (new Date(record.get('timestamp')).getTime() - 3600000),
+                                diff = Math.abs(date - value);
+                              if (diff < bestDiff) {
+                                selected = record;
+                                bestDiff = diff;
+                              }
+                            });
+                            var data = selected.getData();
+                            marker.setLatLng(new L.LatLng(data.lat, data.lon));
+                          }
+                          else if (value > this.middlepoint + 1000) {
+                            console.log('future positions');
+                          }
+                          else {
+                            console.log('last state');
+                            console.log(lastState);
+                          }
+                        }
+                      }
+                    }]
+                  });
+                });
+
+              }
+              cmp.setPlans(plans);
+            }
           }
-          cmp.setPlans(plans);
         });
       });
     }
