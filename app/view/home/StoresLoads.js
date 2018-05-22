@@ -181,10 +181,19 @@ Ext.define('Ripples.view.home.StoresLoads', {
                       }
                       else if (value > this.middlepoint + 1000) {
                         console.log('future positions');
+                        /**
+                         * TODO
+                         * Valid Plan
+                         */
                       }
                       else {
                         console.log('last state');
-                        console.log(lastState);
+                        console.log(marker.lastState);
+                        /**
+                         * TODO
+                         * Se !lastState -> last position ou active
+                         * Se lastState -> position
+                         */
                       }
                     }
                   }

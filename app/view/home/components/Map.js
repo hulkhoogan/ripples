@@ -13,8 +13,8 @@ Ext.define('Ripples.view.home.components.Map', {
     crosshair: null,
 
     mapOptions: {
-      zoom: 12,
-      center: [41.184774, -8.704476]
+      zoom: 5,
+      center: [31.0, -130]
     },
 
     gibsLayers: {},
@@ -34,8 +34,8 @@ Ext.define('Ripples.view.home.components.Map', {
   autoCenter: false,
   enableOwnPositionMarker: false,
   mapOptions: {
-    zoom: 6,
-    center: [41.184774, -8.704476],
+    zoom: 5,
+    center: [31.0, -130],
     zoomSnap: 0.25,
     contextmenu: true,
     drawControl: true,
@@ -113,16 +113,8 @@ Ext.define('Ripples.view.home.components.Map', {
         alert(context.options.strings.outsideMapBoundsMsg);
       }
     }).addTo(map);
-
-    var now = new Date();
-
-    var oneDay = 1000 * 60 * 60 * 24,
-      startTimestamp = now.getTime() - oneDay + now.getTimezoneOffset() * 60 * 1000,
-      startDate = new Date(startTimestamp); //previous day
     var overlays = this.getOverlays();
-    // for (var id in L.GIBS_LAYERS) {
-    //   overlays[id] = new L.GIBSLayer(id, {date: startDate, transparent: true});
-    // }
+
     this.setOverlays(overlays);
 
     L.control.layers(this.getBaseLayers(), this.getOverlays(), {autoZIndex: true}).addTo(map);
