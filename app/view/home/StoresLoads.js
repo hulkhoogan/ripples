@@ -251,8 +251,13 @@ Ext.define('Ripples.view.home.StoresLoads', {
                   });
 
                 var firstDate = new Date(old_positions.items[old_positions.length - 1].data.timestamp).getTime() - 3600000,
-                  lastDate = plan.waypoints[plan.waypoints.length - 1].eta;
-                console.log(new Date(firstDate), new Date(lastDate * 1000), new Date(lastState.time * 1000));
+                  lastDate = plan.waypoints[plan.waypoints.length - 1].eta * 1000;
+
+                if (lastDate < firstDate) {
+                  lastDate = new Date(old_positions.items[0].data.timestamp).getTime() - 3600000;
+                }
+
+                console.log(lastDate, firstDate, name);
 
                 plan.waypoints.forEach(function (waypoint) {
                   layer.addLatLng(new L.LatLng(waypoint.latitude, waypoint.longitude));
@@ -274,7 +279,7 @@ Ext.define('Ripples.view.home.StoresLoads', {
                       middlepoint: lastState.time * 1000,
                       minValue: firstDate,
                       value: lastState.time * 1000,
-                      maxValue: lastDate * 1000,
+                      maxValue: lastDate,
                       increment: 1000, // 1s interval
                       listeners: {
                         change: function () {
