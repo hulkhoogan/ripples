@@ -124,13 +124,15 @@ Ext.define('Ripples.view.home.StoresLoads', {
             });
           var firstDate = new Date(old_positions.items[old_positions.length - 1].data.timestamp).getTime() - 3600000,
             lastDate,
-            lastState;
+            lastState,
+            activeState;
           if (marker.plan) {
-            console.log(marker.plan);
             var plan = marker.plan;
             lastDate = plan.waypoints[plan.waypoints.length - 1].eta * 1000;
-            if (marker.lastState)
-              lastState = marker.lastState.time * 1000;
+            if (marker.lastState) {
+              activeState = marker.lastState.time * 1000;
+              lastState = marker.lastState;
+            }
             if (lastDate < firstDate) {
               lastDate = new Date(old_positions.items[0].data.timestamp).getTime() - 3600000;
             }
@@ -140,10 +142,11 @@ Ext.define('Ripples.view.home.StoresLoads', {
           }
 
           if (!lastState) {
-            lastState = lastDate;
+            activeState = lastDate;
           }
-
-          console.log(lastDate, firstDate, name);
+          else {
+            marker.setLatLng(new L.LatLng(lastState.latitude, lastState.longitude));
+          }
           if (lastDate > firstDate)
             marker.on('click', function () {
               if (marker.slider) marker.slider.destroy();
@@ -156,16 +159,15 @@ Ext.define('Ripples.view.home.StoresLoads', {
                 padding: 5,
                 items: [{
                   xtype: 'slider',
-                  middlepoint: lastState,
+                  middlepoint: activeState,
                   minValue: firstDate,
-                  value: lastState,
+                  value: activeState,
                   maxValue: lastDate,
                   increment: 1000, // 1s interval
                   listeners: {
                     change: function () {
                       value = this.getValues()[0];
-                      if (value < this.middlepoint - 1000) {
-                        console.log('old positions');
+                      if (value < this.middlepoint - 2000) {
                         var selected = null,
                           bestDiff = Number.MAX_SAFE_INTEGER;
                         old_positions.items.forEach(function (record) {
@@ -179,12 +181,34 @@ Ext.define('Ripples.view.home.StoresLoads', {
                         var data = selected.getData();
                         marker.setLatLng(new L.LatLng(data.lat, data.lon));
                       }
-                      else if (value > this.middlepoint + 1000) {
-                        console.log('future positions');
-                        /**
-                         * TODO
-                         * Valid Plan
-                         */
+                      else if (value > this.middlepoint + 2000) {
+                        var lastWaypoint = plan.waypoints[plan.waypoints.length - 1],
+                          timestamp1 = this.middlepoint,
+                          timestamp2 = lastWaypoint.eta * 1000,
+                          point1 = {
+                            x: marker.lastState.latitude,
+                            y: marker.lastState.longitude
+                          }, point2 = {
+                            x: lastWaypoint.latitude,
+                            y: lastWaypoint.longitude
+                          };
+                        marker.plan.waypoints.forEach(function (waypoint) {
+                          var testTime = (waypoint.eta * 1000);
+                          if (value > testTime && testTime > timestamp1) {
+                            point1 = {x: waypoint.latitude, y: waypoint.longitude};
+                            timestamp1 = testTime;
+                          }
+                          else if (value < testTime && testTime < timestamp2) {
+                            point2 = {x: waypoint.latitude, y: waypoint.longitude};
+                            timestamp2 = testTime;
+                          }
+                        });
+                        var distT = me.calcTotalDist(point1, point2),
+                          vel = me.calcVel(distT, timestamp1, timestamp2),
+                          dist = me.calcDist(vel, value - timestamp1),
+                          finalPoint = me.calcPoint(point1, point2, dist, distT);
+
+                        marker.setLatLng(new L.LatLng(finalPoint.x, finalPoint.y));
                       }
                       else {
                         console.log('last state');
@@ -209,6 +233,25 @@ Ext.define('Ripples.view.home.StoresLoads', {
         me.positionsLoad(store, records);
       }, 400);
     }
+  },
+
+  calcVel: function (d, t1, t2) {
+    return d / (t2 - t1);
+  },
+  calcTotalDist: function (p1, p2) {
+    return Math.sqrt(Math.abs(p1.x - p2.x) * Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y) * Math.abs(p1.y - p2.y));
+  },
+  calcDist: function (vel, time) {
+    return vel * time;
+  },
+  calcPoint: function (p1, p2, d, dt) {
+    var x, y;
+    x = p1.x + ((d / dt) * (p2.x - p1.x));
+    y = p1.y + ((d / dt) * (p2.y - p1.y));
+    return {
+      x: x,
+      y: y
+    };
   },
 
   profilesLoad: function (store, records) {
@@ -337,8 +380,8 @@ Ext.define('Ripples.view.home.StoresLoads', {
               var layer = plans[plan.id]['layer'];
               plan.waypoints.forEach(function (waypoint) {
                 layer.addLatLng(new L.LatLng(waypoint.latitude, waypoint.longitude));
-                var marker = new L.Marker(new L.LatLng(waypoint.latitude, waypoint.longitude));
-                // marker.addTo(map);
+                // var marker = new L.Marker(new L.LatLng(waypoint.latitude, waypoint.longitude));
+                // // marker.addTo(map);
               });
               markers[name].plan = plans[plan.id];
               markers[name].lastState = lastState;
