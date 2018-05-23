@@ -182,7 +182,23 @@ Ext.define('Ripples.view.home.StoresLoads', {
                 padding: 5,
                 items: [{
                   xtype: 'slider',
-                  useTips: false,
+                  useTips: true,
+                  tipText: function (slider) {
+                    var date = new Date(slider.value),
+                      year = date.getFullYear(),
+                      month = date.getMonth() + 1,
+                      day = date.getDate();
+
+                    if (day < 10) {
+                      day = '0' + day;
+                    }
+                    if (month < 10) {
+                      month = '0' + month;
+                    }
+                    var formattedDate = day + '-' + month + '-' + year;
+                    formattedDate += ' ' + ('0' + date.getHours()).slice(-2) + 'h:' + ('0' + date.getMinutes()).slice(-2) + 'm' + ('0' + date.getSeconds()).slice(-2) + 's';
+                    return formattedDate;
+                  },
                   height: 60,
                   flex: 1,
                   middlepoint: activeState,
@@ -342,20 +358,20 @@ Ext.define('Ripples.view.home.StoresLoads', {
               }),
               axes: [{
                 type: 'numeric',
-                position: 'left',
+                position: 'bottom',
                 title: 'Temperature',
                 grid: true
                 // renderer: function (axis, v) { return Ext.util.Format.number(v, '000.000') + 'º'; }
               }, {
                 type: 'numeric',
-                position: 'bottom',
+                position: 'left',
                 title: 'Depth'
                 // renderer: function (axis, v) { return Ext.util.Format.number(v, '000') + 'm'; }
               }],
               series: [{
                 type: 'line',
-                xField: 'depth',
-                yField: ['value'],
+                xField: 'value',
+                yField: ['depth'],
                 title: ['Depth', 'Temp'],
                 style: {
                   'stroke-width': 4
