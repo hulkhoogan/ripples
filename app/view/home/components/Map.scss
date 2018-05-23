@@ -30,8 +30,15 @@
   .x-panel-body-default {
     background: transparent !important;
   }
-  .x-btn-button-default-small {
-    height: 50px !important;
+  .x-btn-default-small {
+    background: #51505b !important;
+    border-radius: 5px !important;
+    border: 1px solid black !important;
+  }
+  .x-btn-icon-left > .x-btn-icon-el-default-small, .x-btn-icon-right > .x-btn-icon-el-default-small {
+    width: 40px !important;
+    height: 40px !important;
+    line-height: 40px !important;
   }
 }
 

@@ -63,7 +63,15 @@ Ext.define('Ripples.view.home.StoresLoads', {
             me.addToTail(name, coords[0], coords[1], map, cmp);
           }
         }
-
+        markers[name].on('click', function () {
+          if (markers[name].slider || cmp.activeSlider) {
+            markers[name].slider = cmp.activeSlider;
+            markers[name].slider.down('#reset').handler();
+            markers[name].slider.destroy();
+            markers[name].slider = null;
+            cmp.activeSlider = null;
+          }
+        });
         cmp.setMarkers(markers);
         cmp.setUpdates(updates);
       });
@@ -94,6 +102,7 @@ Ext.define('Ripples.view.home.StoresLoads', {
       model = this.getViewModel(),
       activeMaps = model.get('maps'),
       systems = this.getStore('systems'),
+      active = this.getStore('active'),
       plans = this.getStore('plans');
 
     if (systems.isLoaded() && plans.isLoaded()) {
@@ -145,8 +154,12 @@ Ext.define('Ripples.view.home.StoresLoads', {
 
           if (!lastState) {
             activeState = lastDate;
-            var last = old_positions.items[old_positions.length - 1].data;
-            lastState = {latitude: last.lat, longitude: last.lon};
+            // var last = old_positions.items[old_positions.length - 1].data;
+            // lastState = {latitude: last.lat, longitude: last.lon};
+            active.filter('name', name);
+            var last = active.first().getData();
+            lastState = {latitude: last.coordinates[0], longitude: last.coordinates[1]};
+            active.clearFilter();
           }
           if (lastDate > firstDate)
             marker.on('click', function () {
@@ -162,7 +175,10 @@ Ext.define('Ripples.view.home.StoresLoads', {
                 height: 60,
                 cls: 'slider',
                 renderTo: cmp.el.dom,
-                layout: 'hbox',
+                layout: {
+                  type: 'hbox',
+                  align: 'middle'
+                },
                 padding: 5,
                 items: [{
                   xtype: 'slider',
@@ -230,8 +246,9 @@ Ext.define('Ripples.view.home.StoresLoads', {
                   xtype: 'button',
                   iconCls: 'x-fa fa-map-marker',
                   itemId: 'reset',
-                  height: 60,
-                  width: 60,
+                  margin: '0 0 0 10',
+                  height: 40,
+                  width: 40,
                   padding: 0,
                   handler: function () {
                     var slider = this.up('panel').down('slider');
@@ -240,8 +257,8 @@ Ext.define('Ripples.view.home.StoresLoads', {
                 }, {
                   xtype: 'button',
                   iconCls: 'x-fa fa-times',
-                  height: 60,
-                  width: 60,
+                  height: 40,
+                  width: 40,
                   padding: 0,
                   handler: function () {
                     this.up('panel').down('#reset').handler();
