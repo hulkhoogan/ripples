@@ -4,6 +4,10 @@
   color: white;
 }
 
+.x-mask {
+  z-index: 9999 !important;
+}
+
 .leaflet-control-coordinates {
   left: 40px !important;
 }
@@ -23,4 +27,14 @@
   margin-left: auto;
   margin-right: auto;
   z-index: 400;
+  .x-panel-body-default {
+    background: transparent !important;
+  }
+  .x-btn-button-default-small {
+    height: 50px !important;
+  }
+}
+
+.x-slider-thumb {
+  background: $base-color !important;
 }

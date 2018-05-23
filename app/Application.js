@@ -14,6 +14,7 @@ Ext.define('Ripples.Application', {
 
   launch: function () {
     // TODO - Launch the application
+    Ext.getBody().mask('Loading');
   },
 
   onAppUpdate: function () {

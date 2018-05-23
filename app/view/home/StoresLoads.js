@@ -1,11 +1,13 @@
 Ext.define('Ripples.view.home.StoresLoads', {
 
   requires: [
+    'Ext.button.Button',
     'Ext.chart.CartesianChart',
     'Ext.chart.axis.Numeric',
     'Ext.chart.series.Line',
     'Ext.data.JsonStore',
     'Ext.layout.container.Fit',
+    'Ext.layout.container.HBox',
     'Ext.panel.Panel',
     'Ext.slider.Single',
     'Ext.util.Format'
@@ -143,22 +145,30 @@ Ext.define('Ripples.view.home.StoresLoads', {
 
           if (!lastState) {
             activeState = lastDate;
-          }
-          else {
-            marker.setLatLng(new L.LatLng(lastState.latitude, lastState.longitude));
+            var last = old_positions.items[old_positions.length - 1].data;
+            lastState = {latitude: last.lat, longitude: last.lon};
           }
           if (lastDate > firstDate)
             marker.on('click', function () {
-              if (marker.slider) marker.slider.destroy();
+              if (marker.slider || cmp.activeSlider) {
+                marker.slider = cmp.activeSlider;
+                marker.slider.down('#reset').handler();
+                marker.slider.destroy();
+                marker.slider = null;
+                cmp.activeSlider = null;
+              }
               marker.slider = Ext.create('Ext.panel.Panel', {
                 width: 300,
                 height: 60,
                 cls: 'slider',
                 renderTo: cmp.el.dom,
-                layout: 'fit',
+                layout: 'hbox',
                 padding: 5,
                 items: [{
                   xtype: 'slider',
+                  useTips: false,
+                  height: 60,
+                  flex: 1,
                   middlepoint: activeState,
                   minValue: firstDate,
                   value: activeState,
@@ -211,22 +221,42 @@ Ext.define('Ripples.view.home.StoresLoads', {
                         marker.setLatLng(new L.LatLng(finalPoint.x, finalPoint.y));
                       }
                       else {
-                        console.log('last state');
-                        console.log(marker.lastState);
-                        /**
-                         * TODO
-                         * Se !lastState -> last position ou active
-                         * Se lastState -> position
-                         */
+                        marker.setLatLng(new L.LatLng(lastState.latitude, lastState.longitude));
+
                       }
                     }
                   }
+                }, {
+                  xtype: 'button',
+                  iconCls: 'x-fa fa-map-marker',
+                  itemId: 'reset',
+                  height: 60,
+                  width: 60,
+                  padding: 0,
+                  handler: function () {
+                    var slider = this.up('panel').down('slider');
+                    slider.setValue(slider.middlepoint);
+                  }
+                }, {
+                  xtype: 'button',
+                  iconCls: 'x-fa fa-times',
+                  height: 60,
+                  width: 60,
+                  padding: 0,
+                  handler: function () {
+                    this.up('panel').down('#reset').handler();
+                    this.up('panel').destroy();
+                    marker.slider = null;
+                    cmp.activeSlider = null;
+                  }
                 }]
               });
+              cmp.activeSlider = marker.slider;
             });
 
         });
       });
+      Ext.getBody().unmask();
     }
     else {
       Ext.global.setTimeout(function () {
